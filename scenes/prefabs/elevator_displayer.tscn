@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://dhjdx7hdvpyn5"]
+
+[ext_resource type="Script" uid="uid://mjkq6fmu5eud" path="res://scripts/ElevatorDisplayer.cs" id="1_21owb"]
+[ext_resource type="Texture2D" uid="uid://ctawpfmo2g668" path="res://sprites/target.png" id="2_iu5hs"]
+[ext_resource type="Texture2D" uid="uid://dv1pk6o6rh15s" path="res://sprites/elevator.png" id="3_f76qq"]
+
+[node name="ElevatorDisplayer" type="Node2D" node_paths=PackedStringArray("elevatorModel", "targetModel")]
+script = ExtResource("1_21owb")
+elevatorModel = NodePath("Elevator")
+targetModel = NodePath("Target")
+
+[node name="Target" type="Sprite2D" parent="."]
+position = Vector2(53, 46)
+texture = ExtResource("2_iu5hs")
+
+[node name="Elevator" type="Sprite2D" parent="."]
+position = Vector2(81, 74)
+texture = ExtResource("3_f76qq")
