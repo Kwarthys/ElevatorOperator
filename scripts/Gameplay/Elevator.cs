@@ -25,7 +25,14 @@ public class Elevator
     public void Update(double dt)
     {
         if(m_position == m_targetPosition && forceDisplayUpdate == false)
+        {
+            if(forceDisplayUpdate)
+            {
+                m_displayer.UpdateDisplay(m_position, m_targetPosition);
+                forceDisplayUpdate = false;
+            }
             return;
+        }
 
         float delta = m_speed * (float)dt;
 
