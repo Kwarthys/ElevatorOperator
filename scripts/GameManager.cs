@@ -5,9 +5,11 @@ using System.Reflection.Metadata;
 
 public partial class GameManager : Node
 {
+    [Export] public float elevatorSpeed = 1.0f;
+
     [Export] private ElevatorDisplayer elevatorDisplayer;
 
-    private int elevatorPos = 0;
+    private Elevator elevator;
     private List<ElevatorUser> users = [];
 
     public override void _Ready()
@@ -17,7 +19,7 @@ public partial class GameManager : Node
             users.Add(new(i, 5 - i));
         }
 
-        UpdateUsers();
+        elevator = new(0.0f, elevatorSpeed);
 
         GetViewport().SizeChanged += OnScreenResize;
         OnScreenResize();
@@ -25,13 +27,13 @@ public partial class GameManager : Node
 
     public void OnInputUp()
     {
-        if(elevatorPos < 5)
-            MoveElevator(1);
+        if(elevator.m_targetPosition < 5.0f)
+            MoveElevator(1.0f);
     }
     public void OnInputDown()
     {
-        if(elevatorPos > 0)
-            MoveElevator(-1);
+        if(elevator.m_targetPosition > 0)
+            MoveElevator(-1.0f);
     }
     public void OnInputLeft()
     {
@@ -42,35 +44,43 @@ public partial class GameManager : Node
         GD.Print("RIGHT");
     }
 
-    private void MoveElevator(int offset)
+    public override void _Process(double delta)
     {
-        elevatorPos += offset;
+        elevator.Update(delta);
         UpdateUsers();
+        elevatorDisplayer.DrawElevator(elevator.m_position, elevator.m_targetPosition);
+    }
 
-        elevatorDisplayer.Move(elevatorPos);
+
+    private void MoveElevator(float offset)
+    {
+        elevator.m_targetPosition = Mathf.Round(elevator.m_targetPosition + offset);
     }
 
     private void UpdateUsers()
     {
+        if(elevator.moving)
+            return;
+
         for(int i = 0; i < users.Count; ++i)
         {
             ElevatorUser user = users[i];
             if(user.elevatorIndex != -1)
             {
                 // User is in elevator
-                if(elevatorPos == user.m_destination)
+                if(elevator.m_position == user.m_destination)
                 {
-                    GD.Print("User " + i + " left at floor " + elevatorPos);
-                    user.m_position = elevatorPos;
+                    GD.Print("User " + i + " left at floor " + elevator.m_position);
+                    user.m_position = Mathf.RoundToInt(elevator.m_position);
                     user.elevatorIndex = -1;
                 }
             }
             else if(user.m_destination != user.m_position)
             {
-                if(elevatorPos == user.m_position)
+                if(elevator.m_position == user.m_position)
                 {
                     user.elevatorIndex = 0;
-                    GD.Print("User " + i + " jumped in at floor " + elevatorPos);
+                    GD.Print("User " + i + " jumped in at floor " + elevator.m_position);
                 }
             }
         }
@@ -79,8 +89,5 @@ public partial class GameManager : Node
     private void OnScreenResize()
     {
         ElevatorDisplayer.screenSize = GetViewport().GetVisibleRect().Size;
-        elevatorDisplayer.Redraw();
     }
-
-
 }
