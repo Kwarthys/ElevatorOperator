@@ -1,3 +1,25 @@
-[gd_scene format=3 uid="uid://cqv52q0wus5rh"]
+[gd_scene load_steps=5 format=3 uid="uid://cqv52q0wus5rh"]
 
-[node name="Node3D" type="Node2D"]
+[ext_resource type="Script" uid="uid://c64u4diqj8njf" path="res://scripts/InputManager.cs" id="1_w2twt"]
+[ext_resource type="Script" uid="uid://dp4uxx5m0q0d1" path="res://scripts/GameManager.cs" id="2_pw63i"]
+[ext_resource type="Script" uid="uid://mjkq6fmu5eud" path="res://scripts/ElevatorDisplayer.cs" id="3_7ykc4"]
+[ext_resource type="Texture2D" uid="uid://dv1pk6o6rh15s" path="res://sprites/elevator.png" id="4_pu3yx"]
+
+[node name="Root" type="Node2D"]
+
+[node name="InputManager" type="Node" parent="." node_paths=PackedStringArray("gameManager")]
+script = ExtResource("1_w2twt")
+gameManager = NodePath("../GameManager")
+
+[node name="GameManager" type="Node" parent="." node_paths=PackedStringArray("elevatorDisplayer")]
+script = ExtResource("2_pw63i")
+elevatorDisplayer = NodePath("../Scenery/ElevatorDisplayer")
+
+[node name="Scenery" type="Node2D" parent="."]
+
+[node name="ElevatorDisplayer" type="Node2D" parent="Scenery"]
+position = Vector2(112, 562)
+script = ExtResource("3_7ykc4")
+
+[node name="Elevator" type="Sprite2D" parent="Scenery/ElevatorDisplayer"]
+texture = ExtResource("4_pu3yx")
