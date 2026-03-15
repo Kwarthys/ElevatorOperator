@@ -8,6 +8,7 @@ public partial class GameManager : Node
     [Export] public float elevatorSpeed = 1.0f;
     [Export] private Node sceneryNode;
     [Export] private PackedScene elevatorDisplayerScene;
+    [Export] private UsersDisplayer usersDisplayer;
 
     private List<Elevator> elevators = [];
     private List<ElevatorUser> users = [];
@@ -16,9 +17,9 @@ public partial class GameManager : Node
 
     public override void _Ready()
     {
-        for(int i = 0; i < 5; ++i)
+        for(int i = 0; i < 6; ++i)
         {
-            users.Add(new(i, 5 - i));
+            users.Add(new(new(0.1f, i), 6 - 1 - i));
         }
 
         for(int i = 0; i < 3; ++i)
@@ -59,9 +60,21 @@ public partial class GameManager : Node
     {
         elevators.ForEach((e) => e.Update(delta));
         UpdateUsers();
+        usersDisplayer.DisplayUsers(users);
     }
 
     private void UpdateUsers()
+    {
+        ManageUserBoardOrLeaveElevators();
+
+        users.ForEach((u) =>
+        {
+            if(u.elevatorIndex != -1)
+                u.m_position.Y = elevators[u.elevatorIndex].m_position;
+        });
+    }
+
+    private void ManageUserBoardOrLeaveElevators()
     {
         List<int> pos = [];
         List<int> ids = [];
@@ -90,17 +103,20 @@ public partial class GameManager : Node
                 if(pos[userElevatorLocalID] == user.m_destination)
                 {
                     GD.Print("User " + i + " left at floor " + user.m_destination);
-                    user.m_position = Mathf.RoundToInt(user.m_destination);
+                    user.m_position.Y = Mathf.RoundToInt(user.m_destination);
                     user.elevatorIndex = -1;
+                    user.m_position.X = 0.9f;
                 }
             }
-            else if(user.m_destination != user.m_position)
+            else if(user.m_destination != user.m_position.Y)
             {
-                int userElevatorLocalID = pos.IndexOf(user.m_position);
+                int userElevatorLocalID = pos.IndexOf(Mathf.RoundToInt(user.m_position.Y));
                 if(userElevatorLocalID == -1)
                     continue; // No elevator on user's floor
 
                 user.elevatorIndex = ids[userElevatorLocalID];
+                float randomXOffset = 0.1f * (0.5f - GD.Randf());
+                user.m_position.X = elevators[user.elevatorIndex].GetHorizontalPos() + randomXOffset;
                 GD.Print("User " + i + " jumped in at floor " + user.m_position);
             }
         }
@@ -108,7 +124,7 @@ public partial class GameManager : Node
 
     private void OnScreenResize()
     {
-        ElevatorDisplayer.screenSize = GetViewport().GetVisibleRect().Size;
+        DisplayUtils.screenSize = GetViewport().GetVisibleRect().Size;
         elevators.ForEach((e) => e.forceDisplayUpdate = true);
     }
 }

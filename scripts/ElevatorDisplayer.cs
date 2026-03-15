@@ -7,8 +7,6 @@ public partial class ElevatorDisplayer : Node2D
     [Export] private Sprite2D elevatorModel;
     [Export] private Sprite2D targetModel;
 
-    public static Vector2 screenSize = Vector2.One;
-
     public float horizontalRatio = 0.5f;
 
     public override void _Ready()
@@ -18,15 +16,8 @@ public partial class ElevatorDisplayer : Node2D
 
     public void UpdateDisplay(float pos, float targetPos)
     {
-        elevatorModel.Position = compute2DFromHeight(pos);
-        targetModel.Position = compute2DFromHeight(targetPos);
-    }
-
-    private Vector2 compute2DFromHeight(float pos)
-    {
-        float max = 6.0f;
-        float step = screenSize.Y / (max + 1.0f);
-        return new(screenSize.X * horizontalRatio, (max - pos) * step);
+        elevatorModel.Position = DisplayUtils.ComputeScreenPosFromPos(new(horizontalRatio, pos));
+        targetModel.Position = DisplayUtils.ComputeScreenPosFromPos(new(horizontalRatio, targetPos));
     }
 
 }

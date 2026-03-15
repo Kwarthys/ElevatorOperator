@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://cqv52q0wus5rh"]
+[gd_scene load_steps=5 format=3 uid="uid://cqv52q0wus5rh"]
 
 [ext_resource type="Script" uid="uid://c64u4diqj8njf" path="res://scripts/InputManager.cs" id="1_w2twt"]
 [ext_resource type="Script" uid="uid://dp4uxx5m0q0d1" path="res://scripts/GameManager.cs" id="2_pw63i"]
 [ext_resource type="PackedScene" uid="uid://dhjdx7hdvpyn5" path="res://scenes/prefabs/elevator_displayer.tscn" id="3_7ykc4"]
+[ext_resource type="Script" uid="uid://rmtduyg7n7el" path="res://scripts/UsersDisplayer.cs" id="4_pu3yx"]
 
 [node name="Root" type="Node2D"]
 
@@ -10,9 +11,19 @@
 script = ExtResource("1_w2twt")
 gameManager = NodePath("../GameManager")
 
-[node name="GameManager" type="Node" parent="." node_paths=PackedStringArray("sceneryNode")]
+[node name="GameManager" type="Node" parent="." node_paths=PackedStringArray("sceneryNode", "usersDisplayer")]
 script = ExtResource("2_pw63i")
-sceneryNode = NodePath("../Scenery")
+elevatorSpeed = 5.0
+sceneryNode = NodePath("../Scenery/ElevatorsHolder")
 elevatorDisplayerScene = ExtResource("3_7ykc4")
+usersDisplayer = NodePath("../UsersDisplayer")
+
+[node name="UsersDisplayer" type="Node" parent="." node_paths=PackedStringArray("sceneryHolder")]
+script = ExtResource("4_pu3yx")
+sceneryHolder = NodePath("../Scenery/UsersHolder")
 
 [node name="Scenery" type="Node2D" parent="."]
+
+[node name="ElevatorsHolder" type="Node2D" parent="Scenery"]
+
+[node name="UsersHolder" type="Node2D" parent="Scenery"]

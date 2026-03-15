@@ -12,6 +12,8 @@ public class Elevator
 
     public bool forceDisplayUpdate = false;
 
+    public float GetHorizontalPos() { return m_displayer.horizontalRatio; }
+
     public Elevator(float position, float speed, ElevatorDisplayer displayer)
     {
         m_position = position;
