@@ -6,6 +6,7 @@ using System.Reflection.Metadata;
 public partial class GameManager : Node
 {
     [Export] public float elevatorSpeed = 1.0f;
+    [Export] public float elevatorDoorSpeed = 1.0f;
     [Export] private Node sceneryNode;
     [Export] private PackedScene elevatorDisplayerScene;
     [Export] private UsersDisplayer usersDisplayer;
@@ -22,13 +23,14 @@ public partial class GameManager : Node
             users.Add(new(new(0.1f, i), 6 - 1 - i));
         }
 
-        for(int i = 0; i < 3; ++i)
+        int elevatorCount = 3;
+        for(int i = 0; i < elevatorCount; ++i)
         {
             ElevatorDisplayer elevatorDisplayer = elevatorDisplayerScene.Instantiate<ElevatorDisplayer>();
             sceneryNode.AddChild(elevatorDisplayer);
-            elevators.Add(new(0.0f, elevatorSpeed, elevatorDisplayer));
+            elevators.Add(new(0.0f, elevatorSpeed, elevatorDoorSpeed, elevatorDisplayer));
 
-            elevatorDisplayer.horizontalRatio = (i + 1) / 4.0f;
+            elevatorDisplayer.horizontalRatio = (i + 1.0f) / (elevatorCount + 1.0f);
         }
 
         GetViewport().SizeChanged += OnScreenResize;
@@ -80,7 +82,7 @@ public partial class GameManager : Node
         List<int> ids = [];
         for(int i = 0; i < elevators.Count; ++i)
         {
-            if(elevators[i].moving)
+            if(elevators[i].moving || elevators[i].AreDoorsBlocking() == false)
                 continue;
 
             pos.Add(Mathf.RoundToInt(elevators[i].m_position));
