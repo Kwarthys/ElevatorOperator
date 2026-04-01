@@ -10,6 +10,7 @@ public partial class GameManager : Node
     [Export] private Node sceneryNode;
     [Export] private PackedScene elevatorDisplayerScene;
     [Export] private UsersDisplayer usersDisplayer;
+    [Export] private BackgroundDisplayer backgroundDisplayer;
 
     private List<Elevator> elevators = [];
     private List<ElevatorUser> users = [];
@@ -128,5 +129,6 @@ public partial class GameManager : Node
     {
         DisplayUtils.screenSize = GetViewport().GetVisibleRect().Size;
         elevators.ForEach((e) => e.forceDisplayUpdate = true);
+        backgroundDisplayer.UpdateScenery();
     }
 }
