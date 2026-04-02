@@ -1,7 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://dhjdx7hdvpyn5"]
+[gd_scene load_steps=7 format=3 uid="uid://dhjdx7hdvpyn5"]
 
 [ext_resource type="Script" uid="uid://mjkq6fmu5eud" path="res://scripts/ElevatorDisplayer.cs" id="1_21owb"]
-[ext_resource type="Texture2D" uid="uid://ctawpfmo2g668" path="res://sprites/target.png" id="2_iu5hs"]
 [ext_resource type="Texture2D" uid="uid://c4sd0162v3tg1" path="res://sprites/elevator_0.png" id="4_8tueb"]
 [ext_resource type="Texture2D" uid="uid://b3c28y8lncq8u" path="res://sprites/elevator_1.png" id="5_qnje6"]
 [ext_resource type="Texture2D" uid="uid://fshoxygwokv3" path="res://sprites/elevator_2.png" id="6_qu1q1"]
@@ -33,8 +32,10 @@ elevator = NodePath("AnimatedSprite2D")
 targetModel = NodePath("Target")
 
 [node name="Target" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.25882354)
 position = Vector2(25, 26)
-texture = ExtResource("2_iu5hs")
+scale = Vector2(0.9, 0.9)
+texture = ExtResource("4_8tueb")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_0u6rt")

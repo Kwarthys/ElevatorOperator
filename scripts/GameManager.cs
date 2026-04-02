@@ -41,22 +41,30 @@ public partial class GameManager : Node
     public void OnInputUp()
     {
         if(elevators[selectedElevator].m_targetPosition < 5.0f)
+        {
             elevators[selectedElevator].m_targetPosition += 1.0f;
+            elevators[selectedElevator].forceDisplayUpdate = true;
+        }
     }
     public void OnInputDown()
     {
         if(elevators[selectedElevator].m_targetPosition > 0)
+        {
             elevators[selectedElevator].m_targetPosition -= 1.0f;
+            elevators[selectedElevator].forceDisplayUpdate = true;
+        }
     }
     public void OnInputLeft()
     {
         if(selectedElevator - 1 >= 0)
             selectedElevator--;
+        UpdateSelectionDisplay();
     }
     public void OnInputRight()
     {
         if(selectedElevator + 1 < elevators.Count)
             selectedElevator++;
+        UpdateSelectionDisplay();
     }
 
     public override void _Process(double delta)
@@ -64,6 +72,11 @@ public partial class GameManager : Node
         elevators.ForEach((e) => e.Update(delta));
         UpdateUsers();
         usersDisplayer.DisplayUsers(users);
+    }
+
+    private void UpdateSelectionDisplay()
+    {
+        backgroundDisplayer.MoveSelection((selectedElevator + 1) / 4.0f);
     }
 
     private void UpdateUsers()

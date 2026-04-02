@@ -1,10 +1,17 @@
-[gd_scene load_steps=6 format=3 uid="uid://cqv52q0wus5rh"]
+[gd_scene load_steps=7 format=3 uid="uid://cqv52q0wus5rh"]
 
 [ext_resource type="Script" uid="uid://c64u4diqj8njf" path="res://scripts/InputManager.cs" id="1_w2twt"]
 [ext_resource type="Script" uid="uid://dp4uxx5m0q0d1" path="res://scripts/GameManager.cs" id="2_pw63i"]
 [ext_resource type="PackedScene" uid="uid://dhjdx7hdvpyn5" path="res://scenes/prefabs/elevator_displayer.tscn" id="3_7ykc4"]
 [ext_resource type="Script" uid="uid://rmtduyg7n7el" path="res://scripts/UsersDisplayer.cs" id="4_pu3yx"]
 [ext_resource type="Script" uid="uid://bgv5bk1s6mti6" path="res://scripts/BackgroundDisplayer.cs" id="5_gubc5"]
+
+[sub_resource type="Gradient" id="Gradient_gubc5"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.16666667, 0.33333334, 0.5, 0.6666667, 0.8333333)
+colors = PackedColorArray(0.7607843, 0.14117648, 0.1254902, 1, 0.30588236, 0.6, 0.83137256, 1, 0.8627451, 0.44705883, 0.25882354, 1, 0.27058825, 0.6392157, 0.4, 1, 0.7490196, 0.41568628, 0.69411767, 1, 0.9843137, 1, 0.3764706, 1)
+metadata/_snap_count = 6
+metadata/_snap_enabled = true
 
 [node name="Root" type="Node2D"]
 
@@ -27,8 +34,9 @@ sceneryHolder = NodePath("../Scenery/UsersHolder")
 
 [node name="BackgroundDisplayer" type="Node" parent="." node_paths=PackedStringArray("backgroundHolder")]
 script = ExtResource("5_gubc5")
-color = Color(0.30588236, 0.6, 0.83137256, 1)
-color2 = Color(0.7607843, 0.14117648, 0.1254902, 1)
+backgroundColor = Color(0.07058824, 0.07058824, 0.078431375, 1)
+selectionColor = Color(1, 1, 0.3764706, 0.25882354)
+colors = SubResource("Gradient_gubc5")
 backgroundHolder = NodePath("../Scenery/BackgroundSpritesHolder")
 
 [node name="Scenery" type="Node2D" parent="."]
