@@ -8,7 +8,7 @@ public class Elevator
     public float m_doorSpeed { get; private set; }
     public float m_targetPosition;
     public bool moving { get; private set; } = false;
-    public float m_doorPos { get; private set; } = 1.0f;
+    public float m_doorPos { get; private set; } = 0.0f;
 
     private ElevatorDisplayer m_displayer;
 
@@ -53,7 +53,6 @@ public class Elevator
 
     private void ManageDoors(double dt)
     {
-
         if(m_targetPosition == m_position)
         {
             // We're where we want, open doors

@@ -22,7 +22,7 @@ gameManager = NodePath("../GameManager")
 [node name="GameManager" type="Node" parent="." node_paths=PackedStringArray("sceneryNode", "usersDisplayer", "backgroundDisplayer")]
 script = ExtResource("2_pw63i")
 elevatorSpeed = 4.0
-elevatorDoorSpeed = 1.2
+elevatorDoorSpeed = 0.8
 sceneryNode = NodePath("../Scenery/ElevatorsHolder")
 elevatorDisplayerScene = ExtResource("3_7ykc4")
 usersDisplayer = NodePath("../UsersDisplayer")
@@ -32,19 +32,20 @@ backgroundDisplayer = NodePath("../BackgroundDisplayer")
 script = ExtResource("4_pu3yx")
 sceneryHolder = NodePath("../Scenery/UsersHolder")
 
-[node name="BackgroundDisplayer" type="Node" parent="." node_paths=PackedStringArray("backgroundHolder")]
+[node name="BackgroundDisplayer" type="Node" parent="." node_paths=PackedStringArray("backgroundHolder", "backgroundTextsHolder")]
 script = ExtResource("5_gubc5")
 backgroundColor = Color(0.07058824, 0.07058824, 0.078431375, 1)
-selectionColor = Color(1, 1, 0.3764706, 0.25882354)
+selectionColor = Color(0.45882353, 1, 1, 0.11764706)
 colors = SubResource("Gradient_gubc5")
 backgroundHolder = NodePath("../Scenery/BackgroundSpritesHolder")
+backgroundTextsHolder = NodePath("../Scenery/FloorTextsHolder")
 
 [node name="Scenery" type="Node2D" parent="."]
 
 [node name="BackgroundSpritesHolder" type="Node2D" parent="Scenery"]
 
+[node name="FloorTextsHolder" type="Node2D" parent="Scenery"]
+
 [node name="ElevatorsHolder" type="Node2D" parent="Scenery"]
 
 [node name="UsersHolder" type="Node2D" parent="Scenery"]
-
-[node name="Sprite2D" type="Sprite2D" parent="."]
