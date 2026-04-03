@@ -137,8 +137,6 @@ public class SceneryControl : SceneryItem
     public Control control;
     public override void Update()
     {
-        GD.Print("Size:" + control.Size);
-
         if(size.X >= 0.0f && size.Y >= 0.0f)
             control.Scale = DisplayUtils.screenSize * size;
         control.Position = DisplayUtils.screenSize * center - control.Size * 0.5f;
