@@ -52,6 +52,8 @@ backgroundTextsHolder = NodePath("../Scenery/FloorTextsHolder")
 [node name="UsersHolder" type="Node2D" parent="Scenery"]
 
 [node name="PplGenerator" type="Node2D" parent="."]
+position = Vector2(-7, 0)
 script = ExtResource("6_rt2n2")
 textureSize = Vector2i(100, 100)
 circleRadii = Vector2i(10, 40)
+animAmplitude = 0.1

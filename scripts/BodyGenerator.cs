@@ -4,7 +4,11 @@ public partial class BodyGenerator : Node2D
 {
 	[Export] private Vector2I textureSize;
 	[Export] private Vector2I circleRadii = new Vector2I(10, 50);
+	[Export] private int outlineSize = 5;
 	private Sprite2D sprite;
+	private float dtAccumulator = 0.0f;
+	[Export] private float animSpeed = 1.0f;
+	[Export] private float animAmplitude = 0.2f;
 
 	public override void _Ready()
 	{
@@ -15,10 +19,13 @@ public partial class BodyGenerator : Node2D
 		Generate();
 	}
 
-	public override void _Process(double delta)
+	public override void _Process(double dt)
 	{
 		if(Input.IsActionJustPressed("Left"))
 			Generate();
+
+		dtAccumulator += (float)dt;
+		sprite.Skew = animAmplitude * Mathf.Sin(dtAccumulator * animSpeed);
 	}
 
 	public void Generate()
@@ -30,6 +37,8 @@ public partial class BodyGenerator : Node2D
 
 		Vector2I circleCenterA = new(textureSize.X / 2, circleARadius);
 		Vector2I circleCenterB = new(textureSize.X / 2, textureSize.Y - circleBRadius);
+
+		bool interpSide = GD.Randf() > 0.5f;
 
 		Color c = new(GD.Randf(), GD.Randf(), GD.Randf());
 		for(int y = 0; y < textureSize.Y; ++y)
@@ -45,7 +54,13 @@ public partial class BodyGenerator : Node2D
 					// Interpolate radius
 					center = new(textureSize.X / 2, y);
 					float ratio = (y - circleCenterA.Y) * 1.0f / (circleCenterB.Y - circleCenterA.Y);
-					radius = Mathf.RoundToInt(Mathf.Lerp(circleARadius, circleBRadius, ratio * ratio));
+
+					if(interpSide)
+						ratio *= ratio;
+					else
+						ratio = Mathf.Sqrt(ratio);
+
+					radius = Mathf.RoundToInt(Mathf.Lerp(circleARadius, circleBRadius, ratio));
 				}
 				else
 				{
@@ -64,7 +79,10 @@ public partial class BodyGenerator : Node2D
 				Vector2 dist2ToCenterA = vPos - center;
 				if(dist2ToCenterA.LengthSquared() < radius * radius)
 				{
-					img.SetPixelv(vPos, c);
+					if(dist2ToCenterA.LengthSquared() < (radius - outlineSize) * (radius - outlineSize))
+						img.SetPixelv(vPos, c);
+					else
+						img.SetPixelv(vPos, new(1, 1, 1, 1));
 				}
 				else
 				{
