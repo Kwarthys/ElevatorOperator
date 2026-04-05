@@ -14,6 +14,8 @@ public class Elevator
 
     public bool forceDisplayUpdate = false;
 
+    private int requestedFloorFlags = 0;
+
     public float GetHorizontalPos() { return m_displayer.horizontalRatio; }
 
     public Elevator(float position, float speed, float doorSpeed, ElevatorDisplayer displayer)
@@ -96,5 +98,16 @@ public class Elevator
             newPos = pos + delta;
             return false; // move not done
         }
+    }
+
+    public void RequestFloor(int floor)
+    {
+        requestedFloorFlags |= 1 << floor;
+        m_displayer.SetFloorSelection(requestedFloorFlags);
+    }
+    public void ClearFloorRequest(int floor)
+    {
+        requestedFloorFlags &= ~(1 << floor);
+        m_displayer.SetFloorSelection(requestedFloorFlags);
     }
 }

@@ -1,17 +1,22 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 public partial class ElevatorDisplayer : Node2D
 {
     [Export] private AnimatedSprite2D elevator;
     [Export] private Sprite2D targetModel;
+    [Export] private RichTextLabel floorSelectionLabel;
+    [Export] private Color restSelectionColor;
+    [Export] private Color activeSelectionColor;
 
     public float horizontalRatio = 0.5f;
 
     public override void _Ready()
     {
         Position = Vector2.Zero; // make sure nothing is offset
+        SetFloorSelection(0);
     }
 
     public void UpdateDisplayPos(float pos, float targetPos)
@@ -30,6 +35,24 @@ public partial class ElevatorDisplayer : Node2D
             elevator.Frame = 2;
         else
             elevator.Frame = 3;
+    }
+
+    public void SetFloorSelection(int selectionFlags)
+    {
+        floorSelectionLabel.Clear();
+
+        for(int i = 0; i < DisplayUtils.maxFloors; ++i)
+        {
+            string text = i.ToString();
+            if(i != 0)
+                text = " " + text;
+
+            bool selected = (selectionFlags & (1 << i)) != 0;
+
+            floorSelectionLabel.PushColor(selected ? activeSelectionColor : restSelectionColor);
+            floorSelectionLabel.AddText(text);
+            floorSelectionLabel.Pop();
+        }
     }
 
 }

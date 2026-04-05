@@ -118,6 +118,8 @@ public partial class GameManager : Node
 
                 if(pos[userElevatorLocalID] == user.m_destination)
                 {
+                    elevators[user.elevatorIndex].ClearFloorRequest(user.m_destination);
+
                     GD.Print("User " + i + " left at floor " + user.m_destination);
                     user.m_position.Y = Mathf.RoundToInt(user.m_destination);
                     user.elevatorIndex = -1;
@@ -134,6 +136,8 @@ public partial class GameManager : Node
                 float randomXOffset = 0.1f * (0.5f - GD.Randf());
                 user.m_position.X = elevators[user.elevatorIndex].GetHorizontalPos() + randomXOffset;
                 GD.Print("User " + i + " jumped in at floor " + user.m_position);
+
+                elevators[user.elevatorIndex].RequestFloor(user.m_destination);
             }
         }
     }
