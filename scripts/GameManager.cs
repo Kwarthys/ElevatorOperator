@@ -71,7 +71,7 @@ public partial class GameManager : Node
     {
         elevators.ForEach((e) => e.Update(delta));
         UpdateUsers();
-        usersDisplayer.DisplayUsers(users);
+        usersDisplayer.DisplayUsers(users, delta);
     }
 
     private void UpdateSelectionDisplay()
@@ -143,5 +143,6 @@ public partial class GameManager : Node
         DisplayUtils.screenSize = GetViewport().GetVisibleRect().Size;
         elevators.ForEach((e) => e.forceDisplayUpdate = true);
         backgroundDisplayer.UpdateScenery();
+        usersDisplayer.OnScreenResize();
     }
 }
