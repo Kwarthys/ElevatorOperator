@@ -25,7 +25,7 @@ public partial class BackgroundDisplayer : Node
             items.Add(CreateFloorDisplay(5 - i, backgroundColor, new(0.05f, xPos), new(-1.0f, -1.0f)));
         }
 
-        selectionDisplayer = CreateItem(selectionColor, new(1.0f / 4.0f, 0.5f), new(0.01f, 1.0f), true);
+        selectionDisplayer = CreateItem(selectionColor, new(1.0f / 3.0f, 0.5f), new(0.01f, 1.0f), true);
         items.Add(selectionDisplayer);
 
         UpdateScenery();

@@ -23,6 +23,7 @@ gameManager = NodePath("../GameManager")
 script = ExtResource("2_pw63i")
 elevatorSpeed = 4.0
 elevatorDoorSpeed = 1.2
+usersWalkSpeed = 0.3
 sceneryNode = NodePath("../Scenery/ElevatorsHolder")
 elevatorDisplayerScene = ExtResource("3_7ykc4")
 usersDisplayer = NodePath("../UsersDisplayer")

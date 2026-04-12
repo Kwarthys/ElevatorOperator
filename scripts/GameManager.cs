@@ -1,12 +1,14 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection.Metadata;
 
 public partial class GameManager : Node
 {
     [Export] public float elevatorSpeed = 1.0f;
     [Export] public float elevatorDoorSpeed = 1.0f;
+    [Export] public float usersWalkSpeed = 0.5f;
     [Export] private Node sceneryNode;
     [Export] private PackedScene elevatorDisplayerScene;
     [Export] private UsersDisplayer usersDisplayer;
@@ -21,10 +23,11 @@ public partial class GameManager : Node
     {
         for(int i = 0; i < 6; ++i)
         {
-            users.Add(new(new(0.1f, i), 6 - 1 - i));
+            users.Add(new(new(-0.1f, i), 6 - 1 - i, usersWalkSpeed));
+            users.Last().SetWalkTarget(0.1f);
         }
 
-        int elevatorCount = 3;
+        int elevatorCount = 2;
         for(int i = 0; i < elevatorCount; ++i)
         {
             ElevatorDisplayer elevatorDisplayer = elevatorDisplayerScene.Instantiate<ElevatorDisplayer>();
@@ -67,24 +70,29 @@ public partial class GameManager : Node
         UpdateSelectionDisplay();
     }
 
-    public override void _Process(double delta)
+    public override void _Process(double dt)
     {
-        elevators.ForEach((e) => e.Update(delta));
-        UpdateUsers();
-        usersDisplayer.DisplayUsers(users, delta);
+        elevators.ForEach((e) => e.Update(dt));
+        UpdateUsers(dt);
+        usersDisplayer.DisplayUsers(users, dt);
     }
 
     private void UpdateSelectionDisplay()
     {
-        backgroundDisplayer.MoveSelection((selectedElevator + 1) / 4.0f);
+        backgroundDisplayer.MoveSelection((selectedElevator + 1) / 3.0f);
     }
 
-    private void UpdateUsers()
+    private void UpdateUsers(double dt)
     {
         ManageUserBoardOrLeaveElevators();
 
         users.ForEach((u) =>
         {
+            u.UpdateWalk(dt);
+
+            if(u.state == ElevatorUser.UserState.Spawning && u.m_walking == false)
+                u.state = ElevatorUser.UserState.Waiting;
+
             if(u.elevatorIndex != -1)
                 u.m_position.Y = elevators[u.elevatorIndex].m_position;
         });
@@ -109,6 +117,9 @@ public partial class GameManager : Node
         for(int i = 0; i < users.Count; ++i)
         {
             ElevatorUser user = users[i];
+            if(user.state == ElevatorUser.UserState.Leaving)
+                continue; // User is not interacting with elevators
+
             if(user.elevatorIndex != -1)
             {
                 // User is in elevator
@@ -123,21 +134,44 @@ public partial class GameManager : Node
                     GD.Print("User " + i + " left at floor " + user.m_destination);
                     user.m_position.Y = Mathf.RoundToInt(user.m_destination);
                     user.elevatorIndex = -1;
-                    user.m_position.X = 0.9f;
+                    user.state = ElevatorUser.UserState.Leaving;
+                    user.SetWalkTarget(GD.Randf() > 0.5f ? -1.5f : 1.5f);
                 }
             }
             else if(user.m_destination != user.m_position.Y)
             {
                 int userElevatorLocalID = pos.IndexOf(Mathf.RoundToInt(user.m_position.Y));
                 if(userElevatorLocalID == -1)
+                {
+                    if(user.state == ElevatorUser.UserState.GoingIn)
+                    {
+                        // Elevator just left right in front of this user's face --> todo get angry
+                        user.state = ElevatorUser.UserState.Waiting;
+                        user.SetWalkTarget(0.1f);
+                    }
                     continue; // No elevator on user's floor
+                }
 
-                user.elevatorIndex = ids[userElevatorLocalID];
-                float randomXOffset = 0.1f * (0.5f - GD.Randf());
-                user.m_position.X = elevators[user.elevatorIndex].GetHorizontalPos() + randomXOffset;
-                GD.Print("User " + i + " jumped in at floor " + user.m_position);
+                int elevatorIndex = ids[userElevatorLocalID];
 
-                elevators[user.elevatorIndex].RequestFloor(user.m_destination);
+                if(user.state == ElevatorUser.UserState.Waiting)
+                {
+                    user.state = ElevatorUser.UserState.GoingIn;
+                    float randomXOffset = 0.06f * (0.5f - GD.Randf());
+                    user.SetWalkTarget(elevators[elevatorIndex].GetHorizontalPos() + randomXOffset);
+                }
+                else if(user.state == ElevatorUser.UserState.GoingIn)
+                {
+                    float distanceToElevator = Mathf.Abs(elevators[elevatorIndex].GetHorizontalPos() - user.m_position.X);
+                    if(distanceToElevator < 0.05f) // bit a flexibility
+                    {
+                        // Caught the elevator !
+                        GD.Print("User " + i + " jumped in at floor " + user.m_position);
+                        elevators[elevatorIndex].RequestFloor(user.m_destination);
+                        user.elevatorIndex = elevatorIndex;
+                        user.state = ElevatorUser.UserState.Elevating;
+                    }
+                }
             }
         }
     }

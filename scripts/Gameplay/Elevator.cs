@@ -45,7 +45,7 @@ public class Elevator
 
         if(CanMove())
         {
-            moving = !SpeedMove(dt, m_speed, m_position, m_targetPosition, out float newPos);
+            moving = !Utils.SpeedMove(dt, m_speed, m_position, m_targetPosition, out float newPos);
             m_position = newPos;
         }
 
@@ -60,7 +60,7 @@ public class Elevator
             // We're where we want, open doors
             if(m_doorPos < 1.0f)
             {
-                SpeedMove(dt, m_doorSpeed, m_doorPos, 1.0f, out float newPos);
+                Utils.SpeedMove(dt, m_doorSpeed, m_doorPos, 1.0f, out float newPos);
                 m_doorPos = newPos;
                 m_displayer.UpdateDoorDisplay(m_doorPos);
             }
@@ -70,7 +70,7 @@ public class Elevator
             // We should close the doors as we want to move
             if(m_doorPos > 0.0f)
             {
-                SpeedMove(dt, m_doorSpeed, m_doorPos, 0.0f, out float newPos);
+                Utils.SpeedMove(dt, m_doorSpeed, m_doorPos, 0.0f, out float newPos);
                 m_doorPos = newPos;
                 m_displayer.UpdateDoorDisplay(m_doorPos);
             }
@@ -79,26 +79,6 @@ public class Elevator
 
     private bool CanMove() { return m_doorPos <= 0.0f; }
     public bool AreDoorsBlocking() { return m_doorPos > 0.7f; }
-
-    private bool SpeedMove(double dt, float speed, float pos, float target, out float newPos)
-    {
-        float delta = speed * (float)dt;
-
-        if(target < pos)
-            delta *= -1.0f;
-
-        if(Mathf.Abs(delta) > Mathf.Abs(target - pos))
-        {
-            // Overshoot, snap and be done
-            newPos = target;
-            return true;
-        }
-        else
-        {
-            newPos = pos + delta;
-            return false; // move not done
-        }
-    }
 
     public void RequestFloor(int floor)
     {
