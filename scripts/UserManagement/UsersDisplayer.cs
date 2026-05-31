@@ -12,38 +12,40 @@ public partial class UsersDisplayer : Node
     [Export] private int outlineSize = 5;
     [Export] private float animSpeed = 1.0f;
     [Export] private float animAmplitude = 0.2f;
-    private List<UserSprite> displays = new();
 
     private BodyGenerator bodyGenerator = new();
 
+    private Dictionary<ElevatorUser, UserSprite> userToSpriteMap = [];
+
     public void DisplayUsers(List<ElevatorUser> users, double dt)
     {
-        while(displays.Count < users.Count)
-            CreateNewDisplay();
-
-        int i = 0;
-        while(i < users.Count)
+        foreach(ElevatorUser user in users)
         {
-            UserSprite display = displays[i];
-            ElevatorUser user = users[i];
-            display.Position = DisplayUtils.ComputeScreenPosFromPos(user.m_position);
+            UserSprite sprite;
+            if(userToSpriteMap.ContainsKey(user) == false)
+                sprite = CreateNewDisplay(user);
+            else
+                sprite = userToSpriteMap[user];
 
-            display.Update(dt);
-
-            i++;
+            sprite.Position = DisplayUtils.ComputeScreenPosFromPos(user.m_position);
+            sprite.Update(dt);
         }
-
-        displays.RemoveRange(i, displays.Count - i);
     }
 
-    private void CreateNewDisplay()
+    private UserSprite CreateNewDisplay(ElevatorUser user)
     {
-        displays.Add(new(bodyGenerator.Generate(textureSize, outlineSize, circleRadii)));
-        sceneryHolder.AddChild(displays.Last());
+        UserSprite sprite = new(bodyGenerator.Generate(textureSize, outlineSize, circleRadii));
+        userToSpriteMap.Add(user, sprite);
+        sceneryHolder.AddChild(sprite);
+        return sprite;
     }
 
     public void OnScreenResize()
     {
-        displays.ForEach((d) => { d.OnScreenResize(); d.Update(0.0f); });
+        foreach(UserSprite sprite in userToSpriteMap.Values)
+        {
+            sprite.OnScreenResize();
+            sprite.Update(0.0f);
+        }
     }
 }
