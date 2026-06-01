@@ -11,6 +11,7 @@ public partial class GameManager : Node
     [Export] private PackedScene elevatorDisplayerScene;
     [Export] private UserManager usersManager;
     [Export] private BackgroundDisplayer backgroundDisplayer;
+    [Export] private GameClockManager gameClockManager;
 
     private List<Elevator> elevators = [];
 
@@ -67,6 +68,8 @@ public partial class GameManager : Node
     {
         elevators.ForEach((e) => e.Update(dt));
         usersManager.UpdateUsers(dt, elevators);
+
+        gameClockManager.AdvanceClock(dt);
     }
 
     private void UpdateSelectionDisplay()
