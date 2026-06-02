@@ -3,26 +3,57 @@ using System;
 
 public class ElevatorUser
 {
-    public enum UserState { Spawning, Waiting, GoingIn, Elevating, Leaving }
-    public UserState state = UserState.Spawning;
+    public enum UserElevatorState { Outside, Waiting, GoingIn, Elevating, Leaving }
+    public enum UserScheduleState { Inside, Outside, Leaving, ComingBack }
+    public UserElevatorState elevatorState = UserElevatorState.Outside;
+    public UserScheduleState scheduleState;
     public Vector2 m_position;
     public int m_destination { get; private set; }
+    public int insideDestination { get; private set; }
     public int elevatorIndex = -1;
 
     public float m_horizontalTarget { get; private set; }
     public bool m_walking { get; private set; } = false;
     private float m_walkSpeed;
 
-    public ElevatorUser(Vector2 position, int destination, float walkSpeed)
+    private UserSchedule m_schedule;
+
+    public ElevatorUser(int buildingDestination, float walkSpeed)
     {
-        m_position = position;
-        m_destination = destination;
+        insideDestination = buildingDestination;
         m_walkSpeed = walkSpeed;
 
-        m_horizontalTarget = position.X;
+
+        m_schedule = UserSchedule.Generate();
+        if(m_schedule.ShouldLeave())
+        {
+            scheduleState = UserScheduleState.Outside;
+            m_destination = 0;
+        }
+        else
+        {
+            scheduleState = UserScheduleState.Inside;
+            m_destination = insideDestination;
+        }
+
+        SetHorizontalTargetOuterSides();
+        m_position.Y = m_destination;
+        m_horizontalTarget = m_position.X;
     }
 
-    public void UpdateWalk(double dt)
+    public void Update(double dt)
+    {
+        switch(scheduleState)
+        {
+            case UserScheduleState.Outside: ManageOutside(); break;
+            case UserScheduleState.Inside: ManageInside(); break;
+            case UserScheduleState.Leaving: ManageLeaving(); break;
+            case UserScheduleState.ComingBack: ManageComingBack(); break;
+        }
+        UpdateWalk(dt);
+    }
+
+    private void UpdateWalk(double dt)
     {
         if(m_horizontalTarget != m_position.X)
         {
@@ -31,6 +62,69 @@ public class ElevatorUser
         }
     }
 
-    public void SetWalkTarget(float target) { m_horizontalTarget = target; }
+    /*public bool ShouldLeave() { return m_schedule.ShouldLeave(); }
+    public bool ShouldBack() { return m_schedule.ShouldBack(); }*/
 
+    private void ManageOutside()
+    {
+        if(m_schedule.ShouldBack() == false) // equivalent but clearer as ShouldLeave
+            return;
+
+        // User is outside and must come back, make him reach elevator floor
+        SetHorizontalTargetInnerSides();
+        m_destination = insideDestination;
+        m_walking = true;
+        scheduleState = UserScheduleState.ComingBack;
+    }
+
+    private void ManageInside()
+    {
+        if(m_schedule.ShouldLeave() == false) // equivalent but clearer as ShouldBack
+            return;
+
+        // User is inside and must leave, make him reach elevator floor
+        SetHorizontalTargetInnerSides();
+        m_destination = 0;
+        m_walking = true;
+        scheduleState = UserScheduleState.Leaving;
+    }
+
+    private void ManageLeaving()
+    {
+        if(elevatorState == UserElevatorState.Outside && m_walking == false)
+        {
+            elevatorState = UserElevatorState.Waiting; // leave control to manager and elevators
+        }
+        else if(elevatorState == UserElevatorState.Leaving)
+        {
+            SetHorizontalTargetOuterSides();
+            scheduleState = UserScheduleState.Outside;
+            elevatorState = UserElevatorState.Outside;
+        }
+    }
+
+    private void ManageComingBack()
+    {
+        if(elevatorState == UserElevatorState.Outside && m_walking == false)
+        {
+            elevatorState = UserElevatorState.Waiting; // leave control to manager and elevators
+        }
+        else if(elevatorState == UserElevatorState.Leaving)
+        {
+            SetHorizontalTargetOuterSides();
+            scheduleState = UserScheduleState.Inside;
+            elevatorState = UserElevatorState.Outside;
+        }
+    }
+
+    public void SetHorizontalTargetNearest()
+    {
+        if(m_position.X > 0.5f)
+            m_horizontalTarget = 0.9f;
+        else
+            m_horizontalTarget = 0.1f;
+    }
+    public void SetWalkTarget(float target) { m_horizontalTarget = target; }
+    private void SetHorizontalTargetInnerSides() { m_horizontalTarget = GD.Randf() > 0.5f ? 0.1f : 0.9f; }
+    private void SetHorizontalTargetOuterSides() { m_horizontalTarget = GD.Randf() > 0.5f ? -0.1f : 1.1f; }
 }

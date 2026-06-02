@@ -29,8 +29,6 @@ public class GameClock
         {
             minutes++;
             seconds -= 60.0;
-
-            GD.Print(this); // Todo proper UI display
         }
         while(minutes >= 60)
         {
