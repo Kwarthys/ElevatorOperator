@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cqv52q0wus5rh"]
+[gd_scene load_steps=11 format=3 uid="uid://cqv52q0wus5rh"]
 
 [ext_resource type="Script" uid="uid://c64u4diqj8njf" path="res://scripts/InputManager.cs" id="1_w2twt"]
 [ext_resource type="Script" uid="uid://dp4uxx5m0q0d1" path="res://scripts/GameManager.cs" id="2_pw63i"]
@@ -7,6 +7,8 @@
 [ext_resource type="Script" uid="uid://bgv5bk1s6mti6" path="res://scripts/BackgroundDisplayer.cs" id="5_gubc5"]
 [ext_resource type="Script" uid="uid://c3euh5a37n2wo" path="res://scripts/UserManagement/UserManager.cs" id="5_rt2n2"]
 [ext_resource type="Script" uid="uid://vnepmpm1xnef" path="res://scripts/GameClockManager.cs" id="7_c16ls"]
+[ext_resource type="Script" uid="uid://kudo0btqi8fg" path="res://scripts/ClockDisplayer.cs" id="8_18nlu"]
+[ext_resource type="StyleBox" uid="uid://c0cav1rlixl4v" path="res://UI/styleBoxFlat_ClockBackground.tres" id="8_c1pb6"]
 
 [sub_resource type="Gradient" id="Gradient_gubc5"]
 interpolation_mode = 1
@@ -51,6 +53,7 @@ circleRadii = Vector2i(10, 40)
 
 [node name="GameClockManager" type="Node" parent="."]
 script = ExtResource("7_c16ls")
+gameHourDuration_sec = 5.0
 
 [node name="Scenery" type="Node2D" parent="."]
 
@@ -61,3 +64,30 @@ script = ExtResource("7_c16ls")
 [node name="ElevatorsHolder" type="Node2D" parent="Scenery"]
 
 [node name="UsersHolder" type="Node2D" parent="Scenery"]
+
+[node name="Clock" type="Node2D" parent="Scenery"]
+position = Vector2(150, -1)
+
+[node name="Panel" type="Panel" parent="Scenery/Clock"]
+offset_left = -9.0
+offset_top = -23.0
+offset_right = 100.0
+offset_bottom = 46.0
+theme_override_styles/panel = ExtResource("8_c1pb6")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Scenery/Clock"]
+offset_right = 179.0
+offset_bottom = 96.0
+scale = Vector2(0.5, 0.5)
+theme_override_colors/default_color = Color(0.9843137, 1, 0.3764706, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 7
+theme_override_font_sizes/normal_font_size = 70
+text = "05:30"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+script = ExtResource("8_18nlu")
+clockBackGroundTheme = ExtResource("8_c1pb6")
+lightColor = Color(0.9843137, 1, 0.3764706, 1)
+darkColor = Color(0.45882353, 0.26666668, 0.42745098, 1)
