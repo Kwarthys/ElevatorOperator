@@ -127,4 +127,14 @@ public class ElevatorUser
     public void SetWalkTarget(float target) { m_horizontalTarget = target; }
     private void SetHorizontalTargetInnerSides() { m_horizontalTarget = GD.Randf() > 0.5f ? 0.1f : 0.9f; }
     private void SetHorizontalTargetOuterSides() { m_horizontalTarget = GD.Randf() > 0.5f ? -0.1f : 1.1f; }
+
+    public string GetScheduleDebugText()
+    {
+        string text = scheduleState.ToString();
+
+        text += "\nLeaves: " + (m_schedule.leaveHour < 10 ? "0" : "") + m_schedule.leaveHour + ":" + (m_schedule.leaveMinute < 10 ? "0" : "") + m_schedule.leaveMinute
+        + "\nBacks:   " + (m_schedule.backHour < 10 ? "0" : "") + m_schedule.backHour + ":" + (m_schedule.backMinute < 10 ? "0" : "") + m_schedule.backMinute;
+
+        return text;
+    }
 }

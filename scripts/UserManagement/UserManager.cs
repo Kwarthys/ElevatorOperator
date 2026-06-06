@@ -33,9 +33,9 @@ public partial class UserManager : Node
 
     public void InitUsers()
     {
-        for(int i = 0; i < 6; ++i)
+        for(int i = 0; i < 15; ++i)
         {
-            users.Add(new(6 - 1 - i, usersWalkSpeed * Mathf.Lerp(0.7f, 1.0f, GD.Randf())));
+            users.Add(new(GD.RandRange(1, 5), usersWalkSpeed * Mathf.Lerp(0.7f, 1.0f, GD.Randf())));
         }
     }
 

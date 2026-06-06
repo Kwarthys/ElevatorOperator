@@ -22,4 +22,26 @@ public static class Utils
             return false; // move not done
         }
     }
+
+    public static RichTextLabel GenerateTextLabel(string text, Color c, int fontSize)
+    {
+        RichTextLabel label = new()
+        {
+            FitContent = true,
+            ScrollActive = false,
+            AutowrapMode = TextServer.AutowrapMode.Off,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            Text = text,
+            MouseFilter = Control.MouseFilterEnum.Ignore,
+            Size = new(100.0f, 100.0f)
+        };
+
+        label.AddThemeFontSizeOverride("normal_font_size", fontSize);
+        label.AddThemeColorOverride("default_color", c);
+        label.AddThemeConstantOverride("outline_size", 4);
+        label.AddThemeColorOverride("font_outline_color", new(1, 1, 1, 0.8f));
+
+        return label;
+    }
 }

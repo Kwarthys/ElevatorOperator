@@ -42,6 +42,11 @@ public class GameClock
         }
     }
 
+    public int TimeOfDayInMinutes()
+    {
+        return hours * 60 + minutes;
+    }
+
     public override string ToString()
     {
         return "Day " + days + ", " + hours + ":" + minutes + ":" + seconds;

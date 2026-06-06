@@ -8,17 +8,19 @@ public class UserSchedule
     public int backHour = 0;
     public int backMinute = 0;
 
+    private int leaveInMinutes; // hours and minutes encoded as minutes for comparisons
+    private int backInMinutes;
+
     public bool ShouldLeave()
     {
+        int timeInMinutes = GameClockManager.clock.TimeOfDayInMinutes();
         if(leaveHour < backHour)
         {
-            return GameClockManager.clock.hours > leaveHour && GameClockManager.clock.minutes > leaveMinute
-                && GameClockManager.clock.hours < backHour && GameClockManager.clock.minutes < backMinute;
+            return timeInMinutes > leaveInMinutes && timeInMinutes < backInMinutes;
         }
         else
         {
-            return (GameClockManager.clock.hours > leaveHour && GameClockManager.clock.minutes > leaveMinute)
-                || (GameClockManager.clock.hours < backHour && GameClockManager.clock.minutes < backMinute);
+            return timeInMinutes < backInMinutes || timeInMinutes > leaveInMinutes;
         }
     }
 
@@ -50,6 +52,9 @@ public class UserSchedule
                 (sc.backHour, sc.leaveHour) = (sc.leaveHour, sc.backHour);
             }
         }
+
+        sc.backInMinutes = sc.backHour * 60 + sc.backMinute;
+        sc.leaveInMinutes = sc.leaveHour * 60 + sc.leaveMinute;
 
         return sc;
     }
