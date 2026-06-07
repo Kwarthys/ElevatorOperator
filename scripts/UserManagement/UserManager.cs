@@ -7,7 +7,11 @@ public partial class UserManager : Node
 {
     [Export] private UsersDisplayer usersDisplayer;
     [Export] public float usersWalkSpeed = 0.5f;
+    [Export] private int startingUserCount = 5;
+    [Export] private float addUserPeriod = 10.0f;
     private List<ElevatorUser> users = [];
+
+    private double addUserDTCounter = 0.0f;
 
     public void UpdateUsers(double dt, List<Elevator> elevators)
     {
@@ -24,6 +28,14 @@ public partial class UserManager : Node
             if(u.elevatorIndex != -1)
                 u.m_position.Y = elevators[u.elevatorIndex].m_position;
         });
+
+        addUserDTCounter += dt;
+        while(addUserDTCounter > addUserPeriod)
+        {
+            ElevatorUser user = GenerateUser();
+            GD.Print("Added User: " + user.GetScheduleDebugText());
+            addUserDTCounter -= addUserPeriod;
+        }
     }
 
     public void OnScreenResize()
@@ -33,10 +45,18 @@ public partial class UserManager : Node
 
     public void InitUsers()
     {
-        for(int i = 0; i < 15; ++i)
+        for(int i = 0; i < startingUserCount; ++i)
         {
-            users.Add(new(GD.RandRange(1, 5), usersWalkSpeed * Mathf.Lerp(0.7f, 1.0f, GD.Randf())));
+            GenerateUser();
         }
+    }
+
+    public int GetUserCount() { return users.Count(); }
+
+    private ElevatorUser GenerateUser()
+    {
+        users.Add(new(GD.RandRange(1, 5), usersWalkSpeed * Mathf.Lerp(0.7f, 1.0f, GD.Randf())));
+        return users.Last();
     }
 
     private void ManageUserBoardOrLeaveElevators(List<Elevator> elevators)
@@ -72,7 +92,7 @@ public partial class UserManager : Node
                 {
                     elevators[user.elevatorIndex].ClearFloorRequest(user.m_destination);
 
-                    GD.Print("User " + i + " left at floor " + user.m_destination);
+                    //GD.Print("User " + i + " left at floor " + user.m_destination);
                     user.m_position.Y = Mathf.RoundToInt(user.m_destination);
                     user.elevatorIndex = -1;
                     user.elevatorState = ElevatorUser.UserElevatorState.Leaving;
@@ -87,7 +107,7 @@ public partial class UserManager : Node
                     {
                         // Elevator just left right in front of this user's face --> todo get angry
                         user.elevatorState = ElevatorUser.UserElevatorState.Waiting;
-                        user.SetHorizontalTargetNearest();
+                        user.SetHorizontalTargetNearestInside();
                     }
                     continue; // No elevator on user's floor
                 }
@@ -106,7 +126,7 @@ public partial class UserManager : Node
                     if(distanceToElevator < 0.05f) // bit a flexibility
                     {
                         // Caught the elevator !
-                        GD.Print("User " + i + " jumped in at floor " + user.m_position);
+                        //GD.Print("User " + i + " jumped in at floor " + user.m_position);
                         elevators[elevatorIndex].RequestFloor(user.m_destination);
                         user.elevatorIndex = elevatorIndex;
                         user.elevatorState = ElevatorUser.UserElevatorState.Elevating;

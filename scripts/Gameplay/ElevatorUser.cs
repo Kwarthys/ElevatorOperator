@@ -38,7 +38,7 @@ public class ElevatorUser
 
         SetHorizontalTargetOuterSides();
         m_position.Y = m_destination;
-        m_horizontalTarget = m_position.X;
+        m_position.X = m_horizontalTarget;
     }
 
     public void Update(double dt)
@@ -71,7 +71,7 @@ public class ElevatorUser
             return;
 
         // User is outside and must come back, make him reach elevator floor
-        SetHorizontalTargetInnerSides();
+        SetHorizontalTargetNearestInside();
         m_destination = insideDestination;
         m_walking = true;
         scheduleState = UserScheduleState.ComingBack;
@@ -83,7 +83,7 @@ public class ElevatorUser
             return;
 
         // User is inside and must leave, make him reach elevator floor
-        SetHorizontalTargetInnerSides();
+        SetHorizontalTargetNearestInside();
         m_destination = 0;
         m_walking = true;
         scheduleState = UserScheduleState.Leaving;
@@ -117,13 +117,17 @@ public class ElevatorUser
         }
     }
 
-    public void SetHorizontalTargetNearest()
+    public void SetHorizontalTargetNearestInside() { SetHorizontalTargetNearest(true); }
+    public void SetHorizontalTargetNearestOutside() { SetHorizontalTargetNearest(false); }
+
+    public void SetHorizontalTargetNearest(bool inside)
     {
         if(m_position.X > 0.5f)
-            m_horizontalTarget = 0.9f;
+            m_horizontalTarget = inside ? 0.9f : 1.1f;
         else
-            m_horizontalTarget = 0.1f;
+            m_horizontalTarget = inside ? 0.1f : -0.1f;
     }
+
     public void SetWalkTarget(float target) { m_horizontalTarget = target; }
     private void SetHorizontalTargetInnerSides() { m_horizontalTarget = GD.Randf() > 0.5f ? 0.1f : 0.9f; }
     private void SetHorizontalTargetOuterSides() { m_horizontalTarget = GD.Randf() > 0.5f ? -0.1f : 1.1f; }

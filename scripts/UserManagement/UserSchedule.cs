@@ -31,6 +31,10 @@ public class UserSchedule
         float scheduleType = GD.Randf();
         UserSchedule sc = new();
 
+        // | --- FullRandom --- | --- Classic --- | --- Reversed --- |
+        // 0 ----------------- 0.1 ------------- 0.7 --------------- 1
+        //         10%                  60%               30%
+
         if(scheduleType < 0.1f) // 10% full random
         {
             sc.leaveHour = (int)(GD.Randi() % 24);
@@ -42,12 +46,12 @@ public class UserSchedule
         }
         else
         {
-            sc.leaveHour = GD.RandRange(7, 12);
+            sc.leaveHour = GD.RandRange(5, 12);
             sc.leaveMinute = (int)(GD.Randi() % 60);
-            sc.backHour = GD.RandRange(17, 22);
+            sc.backHour = GD.RandRange(16, 26) % 24;
             sc.backMinute = (int)(GD.Randi() % 60);
 
-            if(scheduleType > 0.9f) // 10% flipped schedule
+            if(scheduleType > 0.7f) // 30% flipped schedule
             {
                 (sc.backHour, sc.leaveHour) = (sc.leaveHour, sc.backHour);
             }

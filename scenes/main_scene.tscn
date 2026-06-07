@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cqv52q0wus5rh"]
+[gd_scene load_steps=12 format=3 uid="uid://cqv52q0wus5rh"]
 
 [ext_resource type="Script" uid="uid://c64u4diqj8njf" path="res://scripts/InputManager.cs" id="1_w2twt"]
 [ext_resource type="Script" uid="uid://dp4uxx5m0q0d1" path="res://scripts/GameManager.cs" id="2_pw63i"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://vnepmpm1xnef" path="res://scripts/GameClockManager.cs" id="7_c16ls"]
 [ext_resource type="Script" uid="uid://kudo0btqi8fg" path="res://scripts/ClockDisplayer.cs" id="8_18nlu"]
 [ext_resource type="StyleBox" uid="uid://c0cav1rlixl4v" path="res://UI/styleBoxFlat_ClockBackground.tres" id="8_c1pb6"]
+[ext_resource type="Script" uid="uid://cdj5rlj727pq" path="res://scripts/UI/UserCounterDisplayer.cs" id="10_6wevv"]
 
 [sub_resource type="Gradient" id="Gradient_gubc5"]
 interpolation_mode = 1
@@ -50,7 +51,6 @@ script = ExtResource("4_pu3yx")
 sceneryHolder = NodePath("../../Scenery/UsersHolder")
 textureSize = Vector2i(100, 100)
 circleRadii = Vector2i(10, 40)
-displayDebugTexts = true
 
 [node name="GameClockManager" type="Node" parent="."]
 script = ExtResource("7_c16ls")
@@ -92,3 +92,20 @@ script = ExtResource("8_18nlu")
 clockBackGroundTheme = ExtResource("8_c1pb6")
 lightColor = Color(0.9843137, 1, 0.3764706, 1)
 darkColor = Color(0.45882353, 0.26666668, 0.42745098, 1)
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="Scenery" node_paths=PackedStringArray("userManager")]
+offset_left = 10.0
+offset_top = 1.0
+offset_right = 249.0
+offset_bottom = 97.0
+scale = Vector2(0.5, 0.5)
+theme_override_colors/default_color = Color(0.9843137, 1, 0.3764706, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 7
+theme_override_font_sizes/normal_font_size = 70
+text = "MERDE"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+script = ExtResource("10_6wevv")
+userManager = NodePath("../../UserManager")

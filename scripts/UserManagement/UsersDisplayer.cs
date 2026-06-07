@@ -24,8 +24,11 @@ public partial class UsersDisplayer : Node
 
     public void DisplayUsers(List<ElevatorUser> users, double dt)
     {
-        while(debugTexts.Count < users.Count)
-            InstantiateNewDebugText();
+        if(displayDebugTexts)
+        {
+            while(debugTexts.Count < users.Count)
+                InstantiateNewDebugText();
+        }
 
         int i;
         for(i = 0; i < users.Count; ++i)
@@ -88,7 +91,7 @@ public partial class UsersDisplayer : Node
 
     private void InstantiateNewDebugText()
     {
-        RichTextLabel label = Utils.GenerateTextLabel("debug", new Color(0.0f, 0.0f, 0.0f), 19);
+        RichTextLabel label = Utils.GenerateTextLabel("", new Color(0.0f, 0.0f, 0.0f), 19);
         sceneryHolder.AddChild(label);
         debugTexts.Add(label);
     }
