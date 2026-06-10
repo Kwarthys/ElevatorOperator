@@ -65,7 +65,7 @@ public partial class UserManager : Node
         List<int> ids = [];
         for(int i = 0; i < elevators.Count; ++i)
         {
-            if(elevators[i].moving || elevators[i].AreDoorsBlocking() == false)
+            if(elevators[i].moving || elevators[i].AreDoorsBlocking())
                 continue;
 
             pos.Add(Mathf.RoundToInt(elevators[i].m_position));
@@ -100,37 +100,43 @@ public partial class UserManager : Node
             }
             else if(user.m_destination != user.m_position.Y)
             {
-                int userElevatorLocalID = pos.IndexOf(Mathf.RoundToInt(user.m_position.Y));
-                if(userElevatorLocalID == -1)
+                if(user.targetElevatorIndex != -1)
                 {
-                    if(user.elevatorState == ElevatorUser.UserElevatorState.GoingIn)
+                    // user is already running toward an elevator, is it still available ?
+                    if(elevators[user.targetElevatorIndex].AreDoorsBlocking())
                     {
                         // Elevator just left right in front of this user's face --> todo get angry
                         user.elevatorState = ElevatorUser.UserElevatorState.Waiting;
                         user.SetHorizontalTargetNearestInside();
+                        user.targetElevatorIndex = -1;
                     }
-                    continue; // No elevator on user's floor
+                    else
+                    {
+                        int elevatorIndex = user.targetElevatorIndex;
+                        float distanceToElevator = Mathf.Abs(elevators[elevatorIndex].GetHorizontalPos() - user.m_position.X);
+                        if(distanceToElevator < 0.05f) // bit of flexibility
+                        {
+                            // Caught the elevator !
+                            //GD.Print("User " + i + " jumped in at floor " + user.m_position);
+                            elevators[elevatorIndex].RequestFloor(user.m_destination);
+                            user.elevatorIndex = elevatorIndex;
+                            user.targetElevatorIndex = -1;
+                            user.elevatorState = ElevatorUser.UserElevatorState.Elevating;
+                        }
+                    }
                 }
-
-                int elevatorIndex = ids[userElevatorLocalID];
-
-                if(user.elevatorState == ElevatorUser.UserElevatorState.Waiting)
+                else
                 {
+                    int usersFloor = Mathf.RoundToInt(user.m_position.Y);
+                    int userElevatorLocalID = pos.IndexOf(usersFloor);
+                    if(userElevatorLocalID == -1)
+                        continue; // No elevator on user's floor
+
+                    int elevatorIndex = ids[userElevatorLocalID];
                     user.elevatorState = ElevatorUser.UserElevatorState.GoingIn;
+                    user.targetElevatorIndex = elevatorIndex;
                     float randomXOffset = 0.06f * (0.5f - GD.Randf());
                     user.SetWalkTarget(elevators[elevatorIndex].GetHorizontalPos() + randomXOffset);
-                }
-                else if(user.elevatorState == ElevatorUser.UserElevatorState.GoingIn)
-                {
-                    float distanceToElevator = Mathf.Abs(elevators[elevatorIndex].GetHorizontalPos() - user.m_position.X);
-                    if(distanceToElevator < 0.05f) // bit a flexibility
-                    {
-                        // Caught the elevator !
-                        //GD.Print("User " + i + " jumped in at floor " + user.m_position);
-                        elevators[elevatorIndex].RequestFloor(user.m_destination);
-                        user.elevatorIndex = elevatorIndex;
-                        user.elevatorState = ElevatorUser.UserElevatorState.Elevating;
-                    }
                 }
             }
         }

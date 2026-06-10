@@ -78,7 +78,7 @@ public class Elevator
     }
 
     private bool CanMove() { return m_doorPos <= 0.0f; }
-    public bool AreDoorsBlocking() { return m_doorPos > 0.7f; }
+    public bool AreDoorsBlocking() { return m_doorPos < 0.7f; }
 
     public void RequestFloor(int floor)
     {

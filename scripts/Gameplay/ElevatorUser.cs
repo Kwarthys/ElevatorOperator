@@ -11,6 +11,7 @@ public class ElevatorUser
     public int m_destination { get; private set; }
     public int insideDestination { get; private set; }
     public int elevatorIndex = -1;
+    public int targetElevatorIndex = -1;
 
     public float m_horizontalTarget { get; private set; }
     public bool m_walking { get; private set; } = false;
@@ -134,8 +135,7 @@ public class ElevatorUser
 
     public string GetScheduleDebugText()
     {
-        string text = scheduleState.ToString();
-
+        string text = scheduleState + " " + Mathf.RoundToInt(m_position.Y) + "/" + m_destination;
         text += "\nLeaves: " + (m_schedule.leaveHour < 10 ? "0" : "") + m_schedule.leaveHour + ":" + (m_schedule.leaveMinute < 10 ? "0" : "") + m_schedule.leaveMinute
         + "\nBacks:   " + (m_schedule.backHour < 10 ? "0" : "") + m_schedule.backHour + ":" + (m_schedule.backMinute < 10 ? "0" : "") + m_schedule.backMinute;
 
