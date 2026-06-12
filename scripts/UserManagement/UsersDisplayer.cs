@@ -12,15 +12,20 @@ public partial class UsersDisplayer : Node
     [Export] private int outlineSize = 5;
     [Export] private float animSpeed = 1.0f;
     [Export] private float animAmplitude = 0.2f;
+    [Export] private StyleBox patienceProgressBar_Fill;
+    [Export] private StyleBox patienceProgressBar_Background;
 
     [Export] private bool displayDebugTexts = false;
+    [Export] private bool displayPatienceBars = true;
     private bool displayDebugTextsMemory = false;
+    private bool displayPatienceBarsMemory = true;
 
     private BodyGenerator bodyGenerator = new();
 
     private Dictionary<ElevatorUser, UserSprite> userToSpriteMap = [];
 
     private List<RichTextLabel> debugTexts = [];
+    private List<ProgressBar> patienceBars = [];
 
     public void DisplayUsers(List<ElevatorUser> users, double dt)
     {
@@ -28,6 +33,12 @@ public partial class UsersDisplayer : Node
         {
             while(debugTexts.Count < users.Count)
                 InstantiateNewDebugText();
+        }
+
+        if(displayPatienceBars)
+        {
+            while(patienceBars.Count < users.Count)
+                InstantiateNewPatienceBar();
         }
 
         int i;
@@ -47,6 +58,12 @@ public partial class UsersDisplayer : Node
                 debugTexts[i].Text = users[i].GetScheduleDebugText();
                 debugTexts[i].Position = sprite.Position;
             }
+
+            if(displayPatienceBars)
+            {
+                patienceBars[i].Value = users[i].GetPatience();
+                patienceBars[i].Position = sprite.Position;
+            }
         }
 
         if(displayDebugTexts)
@@ -56,6 +73,14 @@ public partial class UsersDisplayer : Node
                 debugTexts[j].Text = "";
             }
         }
+
+        bool hideAllBars = displayPatienceBarsMemory && displayPatienceBarsMemory != displayPatienceBars;
+        int hideBarsStartIndex = hideAllBars ? 0 : i;
+        for(int j = hideBarsStartIndex; j < patienceBars.Count; ++j)
+        {
+            patienceBars[j].Position = new(-1000, -1000);
+        }
+        displayPatienceBarsMemory = displayPatienceBars;
 
         if(displayDebugTextsMemory != displayDebugTexts)
         {
@@ -87,6 +112,21 @@ public partial class UsersDisplayer : Node
             sprite.OnScreenResize();
             sprite.Update(0.0f);
         }
+    }
+
+    private void InstantiateNewPatienceBar()
+    {
+        patienceBars.Add(new());
+        ProgressBar bar = patienceBars.Last();
+
+        bar.AddThemeStyleboxOverride("fill", patienceProgressBar_Fill);
+        bar.AddThemeStyleboxOverride("background", patienceProgressBar_Background);
+
+        bar.MaxValue = 1.0f;
+        bar.CustomMinimumSize = new(70, 20);
+        bar.ShowPercentage = false;
+
+        sceneryHolder.AddChild(bar);
     }
 
     private void InstantiateNewDebugText()

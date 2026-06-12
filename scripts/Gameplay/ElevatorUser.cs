@@ -145,6 +145,7 @@ public class ElevatorUser
 
     public void SetHorizontalTargetNearestInside() { SetHorizontalTargetNearest(true); }
     public void SetHorizontalTargetNearestOutside() { SetHorizontalTargetNearest(false); }
+    public float GetPatience() { return m_patience; }
 
     public void SetHorizontalTargetNearest(bool inside)
     {
