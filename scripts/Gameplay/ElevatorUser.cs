@@ -101,8 +101,12 @@ public class ElevatorUser
             elevatorState = UserElevatorState.Outside;
         }
 
+        int leaveTime = m_schedule.GetLeaveTimeInMinute();
+        int backTime = m_schedule.GetBackTimeInMinute();
+        ComputePatience(leaveTime, backTime);
+
         if(m_schedule.ShouldBack())
-            GD.Print("DONE - FINITO - STOP " + GetScheduleDebugText());
+            GD.Print("DONE - FINITO - STOP");
     }
 
     private void ManageComingBack()
@@ -118,8 +122,25 @@ public class ElevatorUser
             elevatorState = UserElevatorState.Outside;
         }
 
+        int leaveTime = m_schedule.GetLeaveTimeInMinute();
+        int backTime = m_schedule.GetBackTimeInMinute();
+        ComputePatience(backTime, leaveTime);
+
         if(m_schedule.ShouldLeave())
-            GD.Print("DONE - FINITO - STOP " + GetScheduleDebugText());
+            GD.Print("DONE - FINITO - STOP");
+    }
+
+    private void ComputePatience(int startMinute, int endMinute)
+    {
+        if(endMinute < startMinute)
+            endMinute += 24 * 60; // Put back next day to make sure we only back after leaving
+
+        int now = GameClockManager.clock.TimeOfDayInMinutes();
+
+        if(now < startMinute)
+            now += 24 * 60; // same idea
+
+        m_patience = 1.0f - Mathf.InverseLerp(startMinute, endMinute, now);
     }
 
     public void SetHorizontalTargetNearestInside() { SetHorizontalTargetNearest(true); }

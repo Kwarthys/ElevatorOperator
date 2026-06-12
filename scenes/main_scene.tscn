@@ -45,6 +45,8 @@ backgroundTextsHolder = NodePath("../Scenery/FloorTextsHolder")
 [node name="UserManager" type="Node" parent="." node_paths=PackedStringArray("usersDisplayer")]
 script = ExtResource("5_rt2n2")
 usersDisplayer = NodePath("UsersDisplayer")
+startingUserCount = 10
+addUserPeriod = 8.0
 
 [node name="UsersDisplayer" type="Node" parent="UserManager" node_paths=PackedStringArray("sceneryHolder")]
 script = ExtResource("4_pu3yx")
