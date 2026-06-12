@@ -16,6 +16,7 @@ public class ElevatorUser
     public float m_horizontalTarget { get; private set; }
     public bool m_walking { get; private set; } = false;
     private float m_walkSpeed;
+    private float m_patience = 1.0f;
 
     private UserSchedule m_schedule;
 
@@ -63,9 +64,6 @@ public class ElevatorUser
         }
     }
 
-    /*public bool ShouldLeave() { return m_schedule.ShouldLeave(); }
-    public bool ShouldBack() { return m_schedule.ShouldBack(); }*/
-
     private void ManageOutside()
     {
         if(m_schedule.ShouldBack() == false) // equivalent but clearer as ShouldLeave
@@ -102,6 +100,9 @@ public class ElevatorUser
             scheduleState = UserScheduleState.Outside;
             elevatorState = UserElevatorState.Outside;
         }
+
+        if(m_schedule.ShouldBack())
+            GD.Print("DONE - FINITO - STOP " + GetScheduleDebugText());
     }
 
     private void ManageComingBack()
@@ -116,6 +117,9 @@ public class ElevatorUser
             scheduleState = UserScheduleState.Inside;
             elevatorState = UserElevatorState.Outside;
         }
+
+        if(m_schedule.ShouldLeave())
+            GD.Print("DONE - FINITO - STOP " + GetScheduleDebugText());
     }
 
     public void SetHorizontalTargetNearestInside() { SetHorizontalTargetNearest(true); }

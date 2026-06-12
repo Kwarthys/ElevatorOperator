@@ -33,7 +33,6 @@ public partial class UserManager : Node
         while(addUserDTCounter > addUserPeriod)
         {
             ElevatorUser user = GenerateUser();
-            GD.Print("Added User: " + user.GetScheduleDebugText());
             addUserDTCounter -= addUserPeriod;
         }
     }

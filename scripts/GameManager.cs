@@ -21,7 +21,7 @@ public partial class GameManager : Node
     {
         usersManager.InitUsers();
 
-        int elevatorCount = 2;
+        int elevatorCount = 3;
         for(int i = 0; i < elevatorCount; ++i)
         {
             ElevatorDisplayer elevatorDisplayer = elevatorDisplayerScene.Instantiate<ElevatorDisplayer>();
@@ -74,7 +74,7 @@ public partial class GameManager : Node
 
     private void UpdateSelectionDisplay()
     {
-        backgroundDisplayer.MoveSelection((selectedElevator + 1) / 3.0f);
+        backgroundDisplayer.MoveSelection(1.0f * (selectedElevator + 1) / (elevators.Count + 1));
     }
 
     private void OnScreenResize()

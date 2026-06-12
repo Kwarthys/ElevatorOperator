@@ -11,6 +11,10 @@ public class UserSchedule
     private int leaveInMinutes; // hours and minutes encoded as minutes for comparisons
     private int backInMinutes;
 
+
+    public int GetLeaveTimeInMinute() { return leaveInMinutes; }
+    public int GetBackTimeInMinute() { return backInMinutes; }
+
     public bool ShouldLeave()
     {
         int timeInMinutes = GameClockManager.clock.TimeOfDayInMinutes();
