@@ -9,9 +9,12 @@ public partial class UserManager : Node
     [Export] public float usersWalkSpeed = 0.5f;
     [Export] private int startingUserCount = 5;
     [Export] private float addUserPeriod = 10.0f;
+    [Export] private Control gameOverScreen;
     private List<ElevatorUser> users = [];
 
     private double addUserDTCounter = 0.0f;
+
+    public bool gameLost { get; private set; } = false;
 
     public void UpdateUsers(double dt, List<Elevator> elevators)
     {
@@ -27,7 +30,16 @@ public partial class UserManager : Node
 
             if(u.elevatorIndex != -1)
                 u.m_position.Y = elevators[u.elevatorIndex].m_position;
+
+            if(gameLost == false && u.GetPatience() == 0.0f)
+            {
+                gameLost = true;
+                gameOverScreen.Visible = true;
+            }
         });
+
+        if(gameLost)
+            return; // stop adding users when game is already lost
 
         addUserDTCounter += dt;
         while(addUserDTCounter > addUserPeriod)
