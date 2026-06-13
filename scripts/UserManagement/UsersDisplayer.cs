@@ -8,10 +8,10 @@ public partial class UsersDisplayer : Node
 {
     [Export] private Node2D sceneryHolder;
     [Export] private Vector2I textureSize;
-    [Export] private Vector2I circleRadii = new Vector2I(10, 50);
+    [Export] private Vector2I circleRadii = new(10, 50);
     [Export] private int outlineSize = 5;
-    [Export] private float animSpeed = 1.0f;
-    [Export] private float animAmplitude = 0.2f;
+    [Export] private Vector2 swaySpeed_MinMax = new(1.0f, 5.0f);
+    [Export] private float swayAmplitude = 0.2f;
     [Export] private StyleBox patienceProgressBar_Fill;
     [Export] private StyleBox patienceProgressBar_Background;
 
@@ -51,7 +51,10 @@ public partial class UsersDisplayer : Node
                 sprite = userToSpriteMap[users[i]];
 
             sprite.Position = DisplayUtils.ComputeScreenPosFromPos(users[i].m_position);
-            sprite.Update(dt);
+
+            float userImpatience = Mathf.Clamp(1.0f - users[i].GetPatience(), 0.0f, 1.0f);
+            float swaySpeed = Mathf.Lerp(swaySpeed_MinMax.X, swaySpeed_MinMax.Y, userImpatience * userImpatience * userImpatience);
+            sprite.Update(dt, swaySpeed);
 
             if(displayDebugTexts)
             {
@@ -99,7 +102,7 @@ public partial class UsersDisplayer : Node
 
     private UserSprite CreateNewDisplay(ElevatorUser user)
     {
-        UserSprite sprite = new(bodyGenerator.Generate(textureSize, outlineSize, circleRadii));
+        UserSprite sprite = new(bodyGenerator.Generate(textureSize, outlineSize, circleRadii), swayAmplitude);
         userToSpriteMap.Add(user, sprite);
         sceneryHolder.AddChild(sprite);
         return sprite;
@@ -110,7 +113,6 @@ public partial class UsersDisplayer : Node
         foreach(UserSprite sprite in userToSpriteMap.Values)
         {
             sprite.OnScreenResize();
-            sprite.Update(0.0f);
         }
     }
 

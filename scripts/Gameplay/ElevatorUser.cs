@@ -101,12 +101,16 @@ public class ElevatorUser
             elevatorState = UserElevatorState.Outside;
         }
 
-        int leaveTime = m_schedule.GetLeaveTimeInMinute();
-        int backTime = m_schedule.GetBackTimeInMinute();
-        ComputePatience(leaveTime, backTime);
-
         if(m_schedule.ShouldBack())
-            GD.Print("DONE - FINITO - STOP");
+        {
+            m_patience = 0.0f;
+        }
+        else
+        {
+            int leaveTime = m_schedule.GetLeaveTimeInMinute();
+            int backTime = m_schedule.GetBackTimeInMinute();
+            ComputePatience(leaveTime, backTime);
+        }
     }
 
     private void ManageComingBack()
@@ -122,12 +126,16 @@ public class ElevatorUser
             elevatorState = UserElevatorState.Outside;
         }
 
-        int leaveTime = m_schedule.GetLeaveTimeInMinute();
-        int backTime = m_schedule.GetBackTimeInMinute();
-        ComputePatience(backTime, leaveTime);
-
         if(m_schedule.ShouldLeave())
-            GD.Print("DONE - FINITO - STOP");
+        {
+            m_patience = 0.0f;
+        }
+        else
+        {
+            int leaveTime = m_schedule.GetLeaveTimeInMinute();
+            int backTime = m_schedule.GetBackTimeInMinute();
+            ComputePatience(backTime, leaveTime);
+        }
     }
 
     private void ComputePatience(int startMinute, int endMinute)

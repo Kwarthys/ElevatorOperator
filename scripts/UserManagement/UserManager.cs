@@ -50,7 +50,7 @@ public partial class UserManager : Node
         }
     }
 
-    public int GetUserCount() { return users.Count(); }
+    public int GetUserCount() { return users.Count; }
 
     private ElevatorUser GenerateUser()
     {
