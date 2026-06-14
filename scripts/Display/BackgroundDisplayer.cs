@@ -10,6 +10,8 @@ public partial class BackgroundDisplayer : Node
     [Export] private Gradient colors;
     [Export] private Node2D backgroundHolder;
     [Export] private Node2D backgroundTextsHolder;
+    [Export] private Node2D elevatorButtonCallHolder;
+    [Export] private ElevatorCallManager callManager;
 
     private List<SceneryItem> items = new();
     private SceneryNode2D selectionDisplayer;
@@ -23,6 +25,13 @@ public partial class BackgroundDisplayer : Node
             float xPos = (i + 1) / 7.0f;
             items.Add(CreateItem(SampleColor(i), new(0.5f, xPos), new(1.0f, 0.01f)));
             items.Add(CreateFloorDisplay(5 - i, backgroundColor, new(0.05f, xPos), new(-1.0f, -1.0f)));
+
+            SceneryNode2D item = CreateTriangle(new(0.175f, xPos), new(0.0005f, 0.001f), i == 5);
+            items.Add(item);
+            callManager.RegisterCallButton((Sprite2D)item.node);
+            item = CreateTriangle(new(0.825f, xPos), new(0.0005f, 0.001f), i == 5);
+            items.Add(item);
+            callManager.RegisterCallButton((Sprite2D)item.node);
         }
 
         selectionDisplayer = CreateItem(selectionColor, new(1.0f / 4.0f, 0.5f), new(0.01f, 1.0f), true);
@@ -80,6 +89,43 @@ public partial class BackgroundDisplayer : Node
             float strength = centerDist / 8.0f; // [1-0.5]
             img.SetPixel(i, 0, c * (1.0f - strength * strength));
         }
+        return ImageTexture.CreateFromImage(img);
+    }
+
+    private SceneryNode2D CreateTriangle(Vector2 center, Vector2 size, bool upward)
+    {
+        Sprite2D sprite = new();
+        sprite.Texture = CreateTriangularTexture(upward);
+        elevatorButtonCallHolder.AddChild(sprite);
+
+        return new()
+        {
+            center = center,
+            size = size,
+            node = sprite
+        };
+    }
+
+    private Texture2D CreateTriangularTexture(bool upward)
+    {
+        int width = 55; // odd for sharp point
+        int height = width / 2 + 1;
+        Image img = Image.CreateEmpty(width, height, false, Image.Format.Rgba8);
+        img.Fill(new(0.0f, 0.0f, 0.0f, 0.0f));
+
+        Color white = new(1.0f, 1.0f, 1.0f);
+        Color black = new(0.0f, 0.0f, 0.0f);
+
+        for(int y = 0; y < height; ++y)
+        {
+            int pixelsToFill = upward ? 2 * y + 1 : width - 2 * y;
+            int pixelStart = (width - pixelsToFill) / 2;
+            for(int i = 0; i < pixelsToFill; ++i)
+            {
+                img.SetPixel(pixelStart + i, y, (i == 0 || i == pixelsToFill - 1) ? black : white);
+            }
+        }
+
         return ImageTexture.CreateFromImage(img);
     }
 

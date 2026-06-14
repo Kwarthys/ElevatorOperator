@@ -25,9 +25,6 @@ public partial class UserManager : Node
         {
             u.Update(dt);
 
-            if(u.elevatorState == ElevatorUser.UserElevatorState.Outside && u.m_walking == false)
-                u.elevatorState = ElevatorUser.UserElevatorState.Waiting;
-
             if(u.elevatorIndex != -1)
                 u.m_position.Y = elevators[u.elevatorIndex].m_position;
 
@@ -109,7 +106,7 @@ public partial class UserManager : Node
                     user.elevatorState = ElevatorUser.UserElevatorState.Leaving;
                 }
             }
-            else if(user.m_destination != user.m_position.Y)
+            else if(user.m_destination != user.m_position.Y) // User wants to use an elevator but is not in one
             {
                 if(user.targetElevatorIndex != -1)
                 {
@@ -136,7 +133,7 @@ public partial class UserManager : Node
                         }
                     }
                 }
-                else
+                else // User is waiting
                 {
                     int usersFloor = Mathf.RoundToInt(user.m_position.Y);
                     int userElevatorLocalID = pos.IndexOf(usersFloor);

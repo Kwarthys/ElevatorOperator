@@ -93,6 +93,8 @@ public class ElevatorUser
         if(elevatorState == UserElevatorState.Outside && m_walking == false)
         {
             elevatorState = UserElevatorState.Waiting; // leave control to manager and elevators
+
+            ElevatorCallManager.CallElevator(Mathf.RoundToInt(m_position.Y));
         }
         else if(elevatorState == UserElevatorState.Leaving)
         {
@@ -118,6 +120,8 @@ public class ElevatorUser
         if(elevatorState == UserElevatorState.Outside && m_walking == false)
         {
             elevatorState = UserElevatorState.Waiting; // leave control to manager and elevators
+
+            ElevatorCallManager.CallElevator(Mathf.RoundToInt(m_position.Y));
         }
         else if(elevatorState == UserElevatorState.Leaving)
         {
@@ -169,7 +173,7 @@ public class ElevatorUser
 
     public string GetScheduleDebugText()
     {
-        string text = scheduleState + " " + Mathf.RoundToInt(m_position.Y) + "/" + m_destination;
+        string text = elevatorState + " - " + scheduleState + " " + Mathf.RoundToInt(m_position.Y) + "/" + m_destination;
         text += "\nLeaves: " + (m_schedule.leaveHour < 10 ? "0" : "") + m_schedule.leaveHour + ":" + (m_schedule.leaveMinute < 10 ? "0" : "") + m_schedule.leaveMinute
         + "\nBacks:   " + (m_schedule.backHour < 10 ? "0" : "") + m_schedule.backHour + ":" + (m_schedule.backMinute < 10 ? "0" : "") + m_schedule.backMinute;
 
