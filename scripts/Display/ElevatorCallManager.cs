@@ -8,6 +8,8 @@ public partial class ElevatorCallManager : Node
     [Export] private Color litColor = new(1.0f, 1.0f, 0.0f);
     [Export] private float litTime = 1.0f;
 
+    [Export] private bool testButton = false;
+
     private List<Sprite2D> callButtons = [];
     private List<float> litTimers = [];
     private static ElevatorCallManager Instance;
@@ -19,6 +21,13 @@ public partial class ElevatorCallManager : Node
 
     public override void _Process(double dt)
     {
+        if(testButton)
+        {
+            testButton = false;
+            int randIndex = GD.RandRange(0, litTimers.Count / 2 - 1);
+            CallElevator(randIndex);
+        }
+
         for(int i = 0; i < callButtons.Count; ++i)
         {
             if(litTimers[i] < 0.0f)
@@ -26,8 +35,22 @@ public partial class ElevatorCallManager : Node
 
             litTimers[i] -= (float)dt;
 
+            callButtons[i].Skew = Mathf.Cos(litTimers[i]);
+
             if(litTimers[i] < 0.0f)
+            {
                 callButtons[i].SelfModulate = offColor;
+                callButtons[i].Skew = 0;
+                callButtons[i].Rotation = 0.0f;
+            }
+            else
+            {
+                callButtons[i].Skew = litTimers[i] * litTimers[i] * 0.8f * Mathf.Sin(litTimers[i] * 30.0f); // Fast decrease fast frequency
+                callButtons[i].Rotation = litTimers[i] * 0.5f * Mathf.Sin(litTimers[i] * 2.0f * Mathf.Tau / litTime); // low decrease low frequency
+
+                if(i % 2 == 0)
+                    callButtons[i].Rotation *= -1.0f; // Reverse every other floor animation orientation for variety
+            }
         }
     }
 
