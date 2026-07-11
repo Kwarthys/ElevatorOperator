@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://cqv52q0wus5rh"]
+[gd_scene load_steps=16 format=3 uid="uid://cqv52q0wus5rh"]
 
 [ext_resource type="Script" uid="uid://c64u4diqj8njf" path="res://scripts/InputManager.cs" id="1_w2twt"]
 [ext_resource type="Script" uid="uid://dp4uxx5m0q0d1" path="res://scripts/GameManager.cs" id="2_pw63i"]
@@ -12,6 +12,7 @@
 [ext_resource type="Script" uid="uid://kfra7gmmnum0" path="res://scripts/Display/ElevatorCallManager.cs" id="10_4w45t"]
 [ext_resource type="Script" uid="uid://cdj5rlj727pq" path="res://scripts/UI/UserCounterDisplayer.cs" id="10_6wevv"]
 [ext_resource type="StyleBox" uid="uid://cjrpjycax1qnl" path="res://scripts/UI/StyleBoxPatienceBar_Background.tres" id="11_mngbo"]
+[ext_resource type="AudioStream" uid="uid://dtepaho06flcc" path="res://sounds/TestBell_B.wav" id="11_r6p65"]
 [ext_resource type="StyleBox" uid="uid://cqtp0vi6bq88m" path="res://scripts/UI/StyleBoxPatienceBar_Fill.tres" id="12_4w45t"]
 
 [sub_resource type="Gradient" id="Gradient_gubc5"]
@@ -50,8 +51,8 @@ callManager = NodePath("../ElevatorCallManager")
 [node name="UserManager" type="Node" parent="." node_paths=PackedStringArray("usersDisplayer", "gameOverScreen")]
 script = ExtResource("5_rt2n2")
 usersDisplayer = NodePath("UsersDisplayer")
-startingUserCount = 15
-addUserPeriod = 5.0
+startingUserCount = 200
+addUserPeriod = 1.0
 gameOverScreen = NodePath("../Scenery/GameOverText")
 
 [node name="UsersDisplayer" type="Node" parent="UserManager" node_paths=PackedStringArray("sceneryHolder")]
@@ -70,6 +71,8 @@ gameHourDuration_sec = 5.0
 
 [node name="ElevatorCallManager" type="Node" parent="."]
 script = ExtResource("10_4w45t")
+testFloor = 0
+callButtonSound = ExtResource("11_r6p65")
 
 [node name="Scenery" type="Node2D" parent="."]
 

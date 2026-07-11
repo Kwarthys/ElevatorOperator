@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public partial class ElevatorCallManager : Node
 {
@@ -9,9 +10,13 @@ public partial class ElevatorCallManager : Node
     [Export] private float litTime = 1.0f;
 
     [Export] private bool testButton = false;
+    [Export] private int testFloor = -1;
+
+    [Export] private AudioStream callButtonSound;
 
     private List<Sprite2D> callButtons = [];
     private List<float> litTimers = [];
+    private List<AudioStreamPlayer2D> buttonSoundPlayers = [];
     private static ElevatorCallManager Instance;
 
     public override void _Ready()
@@ -26,6 +31,12 @@ public partial class ElevatorCallManager : Node
             testButton = false;
             int randIndex = GD.RandRange(0, litTimers.Count / 2 - 1);
             CallElevator(randIndex);
+        }
+
+        if(testFloor != -1)
+        {
+            CallElevator(Mathf.Clamp(testFloor, 0, buttonSoundPlayers.Count - 1));
+            testFloor = -1;
         }
 
         for(int i = 0; i < callButtons.Count; ++i)
@@ -57,9 +68,16 @@ public partial class ElevatorCallManager : Node
 
     public void RegisterCallButton(Sprite2D sprite)
     {
+        if(callButtons.Count % 2 == 0) // Only create half of sound players, as we have two buttons per floor that will share sounds
+        {
+            buttonSoundPlayers.Add(ScaleGenerator.GeneratePlayerForPitchedSound(callButtonSound, 5 - callButtons.Count / 2, "FX"));
+            AddChild(buttonSoundPlayers.Last());
+        }
+
         callButtons.Add(sprite);
         litTimers.Add(-1.0f);
         sprite.SelfModulate = offColor;
+
     }
 
     public static void CallElevator(int floor) { Instance?.CallElevator_Private(floor); }
@@ -72,6 +90,8 @@ public partial class ElevatorCallManager : Node
 
         callButtons[id].SelfModulate = litColor;
         callButtons[id + 1].SelfModulate = litColor;
+
+        buttonSoundPlayers[id / 2].Play();
     }
 
     private int FloorToIndex(int floor) { return callButtons.Count - 2 * (floor + 1); }
