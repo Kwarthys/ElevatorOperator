@@ -1,15 +1,16 @@
 using Godot;
-using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 public partial class ElevatorDisplayer : Node2D
 {
     [Export] private AnimatedSprite2D elevator;
     [Export] private Sprite2D targetModel;
-    [Export] private RichTextLabel floorSelectionLabel;
     [Export] private Color restSelectionColor;
     [Export] private Color activeSelectionColor;
+    [Export] private float sizeScreenRatio = 0.15f;
+    private List<RichTextLabel> floorSigns = [];
+
+    private Texture2D elevatorTexture;
 
     public float horizontalRatio = 0.5f;
 
@@ -17,12 +18,50 @@ public partial class ElevatorDisplayer : Node2D
     {
         Position = Vector2.Zero; // make sure nothing is offset
         SetFloorSelection(0);
+        elevatorTexture = elevator.SpriteFrames.GetFrameTexture("doors", 0);
+
+        for(int i = 0; i < 6; ++i)
+        {
+            RichTextLabel sign = Utils.GenerateTextLabel(i.ToString(), restSelectionColor, 60);
+            AddChild(sign);
+            floorSigns.Add(sign);
+            sign.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
+            sign.Scale = new(0.5f, 0.5f);
+            sign.PivotOffset = sign.Size * 0.5f;
+        }
     }
 
     public void UpdateDisplayPos(float pos, float targetPos)
     {
         elevator.Position = DisplayUtils.ComputeScreenPosFromPos(new(horizontalRatio, pos));
         targetModel.Position = DisplayUtils.ComputeScreenPosFromPos(new(horizontalRatio, targetPos));
+    }
+
+    public void UpdateScale()
+    {
+        float targetSize = sizeScreenRatio * DisplayUtils.screenSize.Y;
+        float scaler = targetSize / elevatorTexture.GetHeight();
+
+        elevator.Scale = new(scaler, scaler);
+        targetModel.Scale = new(scaler * 0.9f, scaler * 0.9f);
+    }
+
+    public void UpdateSigns(double dt)
+    {
+        float availableXSpace = elevatorTexture.GetWidth() * elevator.Scale.X * 1.3f;
+        float padding = 0.05f * availableXSpace;
+        float signBaseSize = availableXSpace / 5.0f - padding;
+        float startXPoint = availableXSpace * 0.5f;
+
+        for(int i = 0; i < floorSigns.Count; ++i)
+        {
+            RichTextLabel sign = floorSigns[i];
+            sign.Position = elevator.Position - sign.Size * 0.5f;
+            sign.Position -= new Vector2(startXPoint - i * (padding + signBaseSize), elevatorTexture.GetHeight() * elevator.Scale.Y * 0.7f);
+
+            float baseScale = signBaseSize / sign.Size.X;
+            sign.Scale = new(baseScale, baseScale);
+        }
     }
 
     public void UpdateDoorDisplay(float status)
@@ -39,20 +78,13 @@ public partial class ElevatorDisplayer : Node2D
 
     public void SetFloorSelection(int selectionFlags)
     {
-        floorSelectionLabel.Clear();
-
-        for(int i = 0; i < DisplayUtils.maxFloors; ++i)
+        for(int i = 0; i < floorSigns.Count; ++i)
         {
-            string text = i.ToString();
-            if(i != 0)
-                text = " " + text;
-
+            floorSigns[i].Clear();
             bool selected = (selectionFlags & (1 << i)) != 0;
-
-            floorSelectionLabel.PushColor(selected ? activeSelectionColor : restSelectionColor);
-            floorSelectionLabel.AddText(text);
-            floorSelectionLabel.Pop();
+            floorSigns[i].PushColor(selected ? activeSelectionColor : restSelectionColor);
+            floorSigns[i].AddText(i.ToString());
+            floorSigns[i].Pop();
         }
     }
-
 }

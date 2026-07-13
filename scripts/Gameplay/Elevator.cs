@@ -33,6 +33,11 @@ public class Elevator
     {
         ManageDoors(dt);
 
+        m_displayer.UpdateSigns(dt);
+
+        if(forceDisplayUpdate)
+            m_displayer.UpdateScale();
+
         if(m_position == m_targetPosition)
         {
             if(forceDisplayUpdate)
