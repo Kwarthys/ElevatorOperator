@@ -33,6 +33,7 @@ targetModel = NodePath("Target")
 restSelectionColor = Color(0, 0, 0, 1)
 activeSelectionColor = Color(0.827451, 0.84705883, 0, 1)
 sizeScreenRatio = 0.14
+signAnimationDuration = 0.75
 
 [node name="Target" type="Sprite2D" parent="."]
 modulate = Color(1, 1, 1, 0.25882354)

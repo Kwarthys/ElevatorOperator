@@ -89,6 +89,8 @@ public class Elevator
     {
         requestedFloorFlags |= 1 << floor;
         m_displayer.SetFloorSelection(requestedFloorFlags);
+
+        m_displayer.AnimateFloorSelection(floor);
     }
     public void ClearFloorRequest(int floor)
     {

@@ -8,7 +8,9 @@ public partial class ElevatorDisplayer : Node2D
     [Export] private Color restSelectionColor;
     [Export] private Color activeSelectionColor;
     [Export] private float sizeScreenRatio = 0.15f;
+    [Export] private float signAnimationDuration = 1.0f;
     private List<RichTextLabel> floorSigns = [];
+    private List<float> animationTimers = [];
 
     private Texture2D elevatorTexture;
 
@@ -28,6 +30,8 @@ public partial class ElevatorDisplayer : Node2D
             sign.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
             sign.Scale = new(0.5f, 0.5f);
             sign.PivotOffset = sign.Size * 0.5f;
+
+            animationTimers.Add(-1.0f);
         }
     }
 
@@ -61,6 +65,23 @@ public partial class ElevatorDisplayer : Node2D
 
             float baseScale = signBaseSize / sign.Size.X;
             sign.Scale = new(baseScale, baseScale);
+
+            if(animationTimers[i] > 0.0f)
+            {
+                sign.Scale *= 1.0f + 4.0f * animationTimers[i] * animationTimers[i] * animationTimers[i] * animationTimers[i];
+                sign.Rotation = 1.2f * animationTimers[i] * animationTimers[i] * Mathf.Sin(animationTimers[i] * 2.0f * Mathf.Tau / signAnimationDuration);
+
+                if(i % 2 == 0)
+                    sign.Rotation *= -1.0f; // Reverse every other sign animation orientation for variety
+
+                animationTimers[i] -= (float)dt;
+
+                if(animationTimers[i] <= 0.0f)
+                {
+                    sign.Scale = new(baseScale, baseScale);
+                    sign.Rotation = 0.0f;
+                }
+            }
         }
     }
 
@@ -74,6 +95,11 @@ public partial class ElevatorDisplayer : Node2D
             elevator.Frame = 2;
         else
             elevator.Frame = 3;
+    }
+
+    public void AnimateFloorSelection(int floor)
+    {
+        animationTimers[floor] = signAnimationDuration;
     }
 
     public void SetFloorSelection(int selectionFlags)
