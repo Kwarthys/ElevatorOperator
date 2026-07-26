@@ -12,7 +12,7 @@
 [ext_resource type="Script" uid="uid://kfra7gmmnum0" path="res://scripts/Display/ElevatorCallManager.cs" id="10_4w45t"]
 [ext_resource type="Script" uid="uid://cdj5rlj727pq" path="res://scripts/UI/UserCounterDisplayer.cs" id="10_6wevv"]
 [ext_resource type="StyleBox" uid="uid://cjrpjycax1qnl" path="res://scripts/UI/StyleBoxPatienceBar_Background.tres" id="11_mngbo"]
-[ext_resource type="AudioStream" uid="uid://dtepaho06flcc" path="res://sounds/TestBell_B.wav" id="11_r6p65"]
+[ext_resource type="AudioStream" uid="uid://lx5ghlj5tk6l" path="res://sounds/TestBell_B.wav" id="11_r6p65"]
 [ext_resource type="StyleBox" uid="uid://cqtp0vi6bq88m" path="res://scripts/UI/StyleBoxPatienceBar_Fill.tres" id="12_4w45t"]
 
 [sub_resource type="Gradient" id="Gradient_gubc5"]

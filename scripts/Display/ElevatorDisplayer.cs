@@ -9,10 +9,14 @@ public partial class ElevatorDisplayer : Node2D
     [Export] private Color activeSelectionColor;
     [Export] private float sizeScreenRatio = 0.15f;
     [Export] private float signAnimationDuration = 1.0f;
+    [Export] private AudioStream buttonSound;
+    private AudioStreamPlayer2D soundPlayer;
     private List<RichTextLabel> floorSigns = [];
     private List<float> animationTimers = [];
 
     private Texture2D elevatorTexture;
+
+    public int soundScaleIndex = 0;
 
     public float horizontalRatio = 0.5f;
 
@@ -21,6 +25,9 @@ public partial class ElevatorDisplayer : Node2D
         Position = Vector2.Zero; // make sure nothing is offset
         SetFloorSelection(0);
         elevatorTexture = elevator.SpriteFrames.GetFrameTexture("doors", 0);
+
+        soundPlayer = ScaleGenerator.GeneratePlayerForPitchedSound(buttonSound, soundScaleIndex, "FX");
+        AddChild(soundPlayer);
 
         for(int i = 0; i < 6; ++i)
         {
@@ -100,6 +107,7 @@ public partial class ElevatorDisplayer : Node2D
     public void AnimateFloorSelection(int floor)
     {
         animationTimers[floor] = signAnimationDuration;
+        soundPlayer?.Play();
     }
 
     public void SetFloorSelection(int selectionFlags)

@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://dhjdx7hdvpyn5"]
+[gd_scene load_steps=8 format=3 uid="uid://dhjdx7hdvpyn5"]
 
 [ext_resource type="Script" uid="uid://mjkq6fmu5eud" path="res://scripts/Display/ElevatorDisplayer.cs" id="1_21owb"]
+[ext_resource type="AudioStream" uid="uid://bhrb3mopvxlu7" path="res://sounds/TestWood_B.wav" id="2_01df7"]
 [ext_resource type="Texture2D" uid="uid://c4sd0162v3tg1" path="res://sprites/elevator_0.png" id="4_8tueb"]
 [ext_resource type="Texture2D" uid="uid://b3c28y8lncq8u" path="res://sprites/elevator_1.png" id="5_qnje6"]
 [ext_resource type="Texture2D" uid="uid://fshoxygwokv3" path="res://sprites/elevator_2.png" id="6_qu1q1"]
@@ -34,6 +35,7 @@ restSelectionColor = Color(0, 0, 0, 1)
 activeSelectionColor = Color(0.827451, 0.84705883, 0, 1)
 sizeScreenRatio = 0.14
 signAnimationDuration = 0.75
+buttonSound = ExtResource("2_01df7")
 
 [node name="Target" type="Sprite2D" parent="."]
 modulate = Color(1, 1, 1, 0.25882354)

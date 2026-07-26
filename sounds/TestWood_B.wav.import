@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://lx5ghlj5tk6l"
-path="res://.godot/imported/TestBell_B.wav-f4d6adac4b061d70356fdd47184a7c40.sample"
+uid="uid://dse886umcmk0q"
+path="res://.godot/imported/TestWood_B.wav-9d0f67fbb675a9238bab630bc4184ac7.sample"
 
 [deps]
 
-source_file="res://sounds/TestBell_B.wav"
-dest_files=["res://.godot/imported/TestBell_B.wav-f4d6adac4b061d70356fdd47184a7c40.sample"]
+source_file="res://sounds/TestWood_B.wav"
+dest_files=["res://.godot/imported/TestWood_B.wav-9d0f67fbb675a9238bab630bc4184ac7.sample"]
 
 [params]
 

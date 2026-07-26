@@ -25,6 +25,7 @@ public partial class GameManager : Node
         for(int i = 0; i < elevatorCount; ++i)
         {
             ElevatorDisplayer elevatorDisplayer = elevatorDisplayerScene.Instantiate<ElevatorDisplayer>();
+            elevatorDisplayer.soundScaleIndex = 2 * i;
             sceneryNode.AddChild(elevatorDisplayer);
             elevators.Add(new(0.0f, elevatorSpeed, elevatorDoorSpeed, elevatorDisplayer));
 
