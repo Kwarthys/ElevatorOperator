@@ -16,10 +16,15 @@ public partial class UserManager : Node
 
     public bool gameLost { get; private set; } = false;
 
+    [Export] private int chaosMeterUserCountMax = 30;
+    public float chaosMeter { get; private set; } = 0.0f;
+
     public void UpdateUsers(double dt, List<Elevator> elevators)
     {
         usersDisplayer.DisplayUsers(users, dt);
         ManageUserBoardOrLeaveElevators(elevators);
+
+        int usersToManage = 0;
 
         users.ForEach((u) =>
         {
@@ -28,12 +33,17 @@ public partial class UserManager : Node
             if(u.elevatorIndex != -1)
                 u.m_position.Y = elevators[u.elevatorIndex].m_position;
 
+            if(u.NeedsALift())
+                usersToManage++;
+
             if(gameLost == false && u.GetPatience() == 0.0f)
             {
                 gameLost = true;
                 gameOverScreen.Visible = true;
             }
         });
+
+        chaosMeter = Mathf.Min(1.0f, usersToManage / chaosMeterUserCountMax);
 
         if(gameLost)
             return; // stop adding users when game is already lost

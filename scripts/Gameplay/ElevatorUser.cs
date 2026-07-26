@@ -55,6 +55,18 @@ public class ElevatorUser
         UpdateWalk(dt);
     }
 
+    public bool NeedsALift()
+    {
+        switch(scheduleState)
+        {
+            case UserScheduleState.Leaving:
+            case UserScheduleState.ComingBack:
+                return true;
+            default:
+                return false;
+        }
+    }
+
     private void UpdateWalk(double dt)
     {
         if(m_horizontalTarget != m_position.X)
