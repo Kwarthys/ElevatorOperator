@@ -41,7 +41,7 @@ gameClockManager = NodePath("../GameClockManager")
 [node name="BackgroundDisplayer" type="Node" parent="." node_paths=PackedStringArray("backgroundHolder", "backgroundTextsHolder", "elevatorButtonCallHolder", "callManager")]
 script = ExtResource("5_gubc5")
 backgroundColor = Color(0.07058824, 0.07058824, 0.078431375, 1)
-selectionColor = Color(0.45882353, 1, 1, 0.11764706)
+selectionColor = Color(0.45882353, 1, 1, 0.23529412)
 colors = SubResource("Gradient_gubc5")
 backgroundHolder = NodePath("../Scenery/BackgroundSpritesHolder")
 backgroundTextsHolder = NodePath("../Scenery/FloorTextsHolder")
