@@ -43,7 +43,7 @@ public partial class UserManager : Node
             }
         });
 
-        chaosMeter = Mathf.Min(1.0f, usersToManage / chaosMeterUserCountMax);
+        chaosMeter = Mathf.Min(1.0f, 1.0f * usersToManage / chaosMeterUserCountMax);
 
         if(gameLost)
             return; // stop adding users when game is already lost

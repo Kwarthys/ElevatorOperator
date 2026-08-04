@@ -58,6 +58,7 @@ usersDisplayer = NodePath("UsersDisplayer")
 startingUserCount = 15
 addUserPeriod = 0.7
 gameOverScreen = NodePath("../Scenery/GameOverText")
+chaosMeterUserCountMax = 40
 
 [node name="UsersDisplayer" type="Node" parent="UserManager" node_paths=PackedStringArray("sceneryHolder")]
 script = ExtResource("4_pu3yx")
@@ -84,7 +85,8 @@ userManager = NodePath("../UserManager")
 chillMusic = NodePath("chillMusicPlayer")
 tenseMusic = NodePath("tenseMusicPlayer")
 chaosMusic = NodePath("chaosMusicPlayer")
-tenseToChaos = 0.99
+chillToTense = 0.4
+tenseToChaos = 0.8
 
 [node name="chillMusicPlayer" type="AudioStreamPlayer2D" parent="MusicManager"]
 stream = ExtResource("13_bcnxi")

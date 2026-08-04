@@ -11,6 +11,10 @@ public partial class MusicManager : Node
     [Export] private float chillToTense = 0.5f;
     [Export] private float tenseToChaos = 0.9f;
 
+    [Export] private bool debugDisplay = true;
+
+    private int previousDisplayDebug = 0;
+
     public override void _Ready()
     {
         chillMusic.Finished += LoopChill;
@@ -24,21 +28,34 @@ public partial class MusicManager : Node
         tenseMusic.VolumeDb = -80.0f;
         chaosMusic.VolumeDb = -80.0f;
         float chaos = userManager.chaosMeter;
+
+        int displayDebug;
+
         if(chaos < chillToTense)
         {
             // should play chill
             chillMusic.VolumeDb = 0.0f;
+            displayDebug = 1;
         }
         else if(chaos > tenseToChaos)
         {
             // should play chaos
             chaosMusic.VolumeDb = 0.0f;
+            displayDebug = 3;
         }
         else
         {
             // should play tense
             tenseMusic.VolumeDb = 0.0f;
+            displayDebug = 2;
         }
+
+        if(debugDisplay && displayDebug != previousDisplayDebug)
+        {
+            previousDisplayDebug = displayDebug;
+            GD.Print("Music " + displayDebug + "/3");
+        }
+
     }
 
     private void LoopChill() { chillMusic.Play(); }
