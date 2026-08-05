@@ -7,6 +7,7 @@ public partial class MusicManager : Node
     [Export] private AudioStreamPlayer2D chillMusic;
     [Export] private AudioStreamPlayer2D tenseMusic;
     [Export] private AudioStreamPlayer2D chaosMusic;
+    [Export] private float maxVolumeDb = 0.0f;
 
     [Export] private float chillToTense = 0.5f;
     [Export] private float tenseToChaos = 0.9f;
@@ -34,19 +35,19 @@ public partial class MusicManager : Node
         if(chaos < chillToTense)
         {
             // should play chill
-            chillMusic.VolumeDb = 0.0f;
+            chillMusic.VolumeDb = maxVolumeDb;
             displayDebug = 1;
         }
         else if(chaos > tenseToChaos)
         {
             // should play chaos
-            chaosMusic.VolumeDb = 0.0f;
+            chaosMusic.VolumeDb = maxVolumeDb;
             displayDebug = 3;
         }
         else
         {
             // should play tense
-            tenseMusic.VolumeDb = 0.0f;
+            tenseMusic.VolumeDb = maxVolumeDb;
             displayDebug = 2;
         }
 

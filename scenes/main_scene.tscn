@@ -15,9 +15,9 @@
 [ext_resource type="AudioStream" uid="uid://lx5ghlj5tk6l" path="res://sounds/TestBell_B.wav" id="11_r6p65"]
 [ext_resource type="StyleBox" uid="uid://cqtp0vi6bq88m" path="res://scripts/UI/StyleBoxPatienceBar_Fill.tres" id="12_4w45t"]
 [ext_resource type="Script" uid="uid://hpdo85vwvi4p" path="res://scripts/MusicManager.cs" id="12_si52b"]
-[ext_resource type="AudioStream" uid="uid://dsrqe8pcrvvuk" path="res://Music/ElevatorOperator_Chill.wav" id="13_bcnxi"]
-[ext_resource type="AudioStream" uid="uid://3ucoffu744en" path="res://Music/ElevatorOperator_Tense.wav" id="14_7nt27"]
-[ext_resource type="AudioStream" uid="uid://fgh5j1u5sow1" path="res://Music/ElevatorOperator_Chaos.wav" id="15_k6f3i"]
+[ext_resource type="AudioStream" uid="uid://bqvklpawbitn7" path="res://Music/ElevatorOperator_Chill.wav" id="13_bcnxi"]
+[ext_resource type="AudioStream" uid="uid://cqc5qaniajerw" path="res://Music/ElevatorOperator_Tense.wav" id="14_7nt27"]
+[ext_resource type="AudioStream" uid="uid://bmac1ic7b81tl" path="res://Music/ElevatorOperator_Chaos.wav" id="15_k6f3i"]
 
 [sub_resource type="Gradient" id="Gradient_gubc5"]
 interpolation_mode = 1
@@ -85,25 +85,30 @@ userManager = NodePath("../UserManager")
 chillMusic = NodePath("chillMusicPlayer")
 tenseMusic = NodePath("tenseMusicPlayer")
 chaosMusic = NodePath("chaosMusicPlayer")
+maxVolumeDb = 4.0
 chillToTense = 0.4
 tenseToChaos = 0.8
+debugDisplay = false
 
 [node name="chillMusicPlayer" type="AudioStreamPlayer2D" parent="MusicManager"]
 stream = ExtResource("13_bcnxi")
 volume_db = -80.0
 autoplay = true
+panning_strength = 0.0
 bus = &"Music"
 
 [node name="tenseMusicPlayer" type="AudioStreamPlayer2D" parent="MusicManager"]
 stream = ExtResource("14_7nt27")
 volume_db = -80.0
 autoplay = true
+panning_strength = 0.0
 bus = &"Music"
 
 [node name="chaosMusicPlayer" type="AudioStreamPlayer2D" parent="MusicManager"]
 stream = ExtResource("15_k6f3i")
 volume_db = -80.0
 autoplay = true
+panning_strength = 0.0
 bus = &"Music"
 
 [node name="Scenery" type="Node2D" parent="."]
