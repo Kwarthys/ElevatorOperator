@@ -32,7 +32,7 @@ metadata/_snap_enabled = true
 script = ExtResource("1_w2twt")
 gameManager = NodePath("../GameManager")
 
-[node name="GameManager" type="Node" parent="." node_paths=PackedStringArray("sceneryNode", "usersManager", "backgroundDisplayer", "gameClockManager")]
+[node name="GameManager" type="Node" parent="." node_paths=PackedStringArray("sceneryNode", "usersManager", "backgroundDisplayer", "gameClockManager", "chronoLabel")]
 script = ExtResource("2_pw63i")
 elevatorSpeed = 4.0
 elevatorDoorSpeed = 1.2
@@ -41,6 +41,7 @@ elevatorDisplayerScene = ExtResource("3_7ykc4")
 usersManager = NodePath("../UserManager")
 backgroundDisplayer = NodePath("../BackgroundDisplayer")
 gameClockManager = NodePath("../GameClockManager")
+chronoLabel = NodePath("../Scenery/GameTimerDisplay")
 
 [node name="BackgroundDisplayer" type="Node" parent="." node_paths=PackedStringArray("backgroundHolder", "backgroundTextsHolder", "elevatorButtonCallHolder", "callManager")]
 script = ExtResource("5_gubc5")
@@ -186,3 +187,14 @@ scroll_active = false
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="GameTimerDisplay" type="RichTextLabel" parent="Scenery"]
+offset_left = 1073.0
+offset_right = 1153.0
+offset_bottom = 32.0
+scale = Vector2(0.7, 0.7)
+theme_override_font_sizes/normal_font_size = 40
+text = "00:00"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0

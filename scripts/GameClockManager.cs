@@ -4,7 +4,7 @@ using System;
 public partial class GameClockManager : Node
 {
     [Export] private double gameHourDuration_sec = 60.0;
-    [Export] private double gameHourDurationNightTime_sec = 60.0; // Todo accelerate time during night
+    [Export] private double gameHourDurationNightTime_sec = 60.0;
 
     public static GameClock clock = new(); // static for easy (and dirty) access accross the project
 
