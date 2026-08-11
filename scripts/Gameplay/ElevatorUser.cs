@@ -79,7 +79,7 @@ public class ElevatorUser
 
     private void ManageOutside()
     {
-        if(m_schedule.ShouldBack() == false) // equivalent but clearer as ShouldLeave
+        if(m_schedule.ShouldBack() == false) // equivalent but clearer than ShouldLeave
             return;
 
         // User is outside and must come back, make him reach elevator floor
@@ -91,7 +91,7 @@ public class ElevatorUser
 
     private void ManageInside()
     {
-        if(m_schedule.ShouldLeave() == false) // equivalent but clearer as ShouldBack
+        if(m_schedule.ShouldLeave() == false) // equivalent but clearer than ShouldBack
             return;
 
         // User is inside and must leave, make him reach elevator floor
@@ -114,6 +114,8 @@ public class ElevatorUser
             SetHorizontalTargetOuterSides();
             scheduleState = UserScheduleState.Outside;
             elevatorState = UserElevatorState.Outside;
+
+            StatisticsManager.IncrNumberOfTravels();
         }
 
         if(m_schedule.ShouldBack())
@@ -146,6 +148,8 @@ public class ElevatorUser
             SetHorizontalTargetOuterSides();
             scheduleState = UserScheduleState.Inside;
             elevatorState = UserElevatorState.Outside;
+
+            StatisticsManager.IncrNumberOfTravels();
         }
 
         if(m_schedule.ShouldLeave())

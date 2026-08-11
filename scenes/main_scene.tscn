@@ -55,8 +55,8 @@ callManager = NodePath("../ElevatorCallManager")
 [node name="UserManager" type="Node" parent="." node_paths=PackedStringArray("usersDisplayer", "gameOverScreen")]
 script = ExtResource("5_rt2n2")
 usersDisplayer = NodePath("UsersDisplayer")
-startingUserCount = 15
-addUserPeriod = 0.5
+startingUserCount = 30
+addUserPeriod = 2.0
 gameOverScreen = NodePath("../Scenery/GameOverText")
 chaosMeterUserCountMax = 40
 

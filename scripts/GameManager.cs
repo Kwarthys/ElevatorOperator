@@ -19,6 +19,13 @@ public partial class GameManager : Node
 
     public override void _Ready()
     {
+        StartGame();
+    }
+
+    public void StartGame()
+    {
+        StatisticsManager.Reset();
+
         usersManager.InitUsers();
 
         int elevatorCount = 3;
