@@ -77,7 +77,6 @@ gameHourDuration_sec = 5.0
 
 [node name="ElevatorCallManager" type="Node" parent="."]
 script = ExtResource("10_4w45t")
-testFloor = 0
 callButtonSound = ExtResource("11_r6p65")
 
 [node name="MusicManager" type="Node" parent="." node_paths=PackedStringArray("userManager", "chillMusic", "tenseMusic", "chaosMusic")]
