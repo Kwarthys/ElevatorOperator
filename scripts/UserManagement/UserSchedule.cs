@@ -36,10 +36,10 @@ public class UserSchedule
         UserSchedule sc = new();
 
         // | --- FullRandom --- | --- Classic --- | --- Reversed --- |
-        // 0 ----------------- 0.1 ------------- 0.7 --------------- 1
-        //         10%                  60%               30%
+        // 0 -----------------0.05 ------------ 0.85 --------------- 1
+        //          5%                  80%               15%
 
-        if(scheduleType < 0.1f) // 10% full random
+        if(scheduleType < 0.05f) // 10% full random
         {
             sc.leaveHour = (int)(GD.Randi() % 24);
             sc.leaveMinute = (int)(GD.Randi() % 60);
@@ -55,7 +55,7 @@ public class UserSchedule
             sc.backHour = GD.RandRange(16, 26) % 24;
             sc.backMinute = (int)(GD.Randi() % 60);
 
-            if(scheduleType > 0.7f) // 30% flipped schedule
+            if(scheduleType > 0.85f) // 15% flipped schedule
             {
                 (sc.backHour, sc.leaveHour) = (sc.leaveHour, sc.backHour);
             }

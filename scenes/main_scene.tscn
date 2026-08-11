@@ -56,7 +56,7 @@ callManager = NodePath("../ElevatorCallManager")
 script = ExtResource("5_rt2n2")
 usersDisplayer = NodePath("UsersDisplayer")
 startingUserCount = 15
-addUserPeriod = 0.7
+addUserPeriod = 0.5
 gameOverScreen = NodePath("../Scenery/GameOverText")
 chaosMeterUserCountMax = 40
 
@@ -85,7 +85,7 @@ userManager = NodePath("../UserManager")
 chillMusic = NodePath("chillMusicPlayer")
 tenseMusic = NodePath("tenseMusicPlayer")
 chaosMusic = NodePath("chaosMusicPlayer")
-maxVolumeDb = 4.0
+maxVolumeDb = 5.0
 chillToTense = 0.4
 tenseToChaos = 0.8
 debugDisplay = false

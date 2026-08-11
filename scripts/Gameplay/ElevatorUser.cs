@@ -17,6 +17,7 @@ public class ElevatorUser
     public bool m_walking { get; private set; } = false;
     private float m_walkSpeed;
     private float m_patience = 1.0f;
+    private float m_lastPatience = 1.0f;
 
     private UserSchedule m_schedule;
 
@@ -124,6 +125,11 @@ public class ElevatorUser
             int leaveTime = m_schedule.GetLeaveTimeInMinute();
             int backTime = m_schedule.GetBackTimeInMinute();
             ComputePatience(leaveTime, backTime);
+
+            if(elevatorState == UserElevatorState.Waiting && ShouldReCall())
+            {
+                ElevatorCallManager.CallElevator(Mathf.RoundToInt(m_position.Y)); // send call again
+            }
         }
     }
 
@@ -151,6 +157,11 @@ public class ElevatorUser
             int leaveTime = m_schedule.GetLeaveTimeInMinute();
             int backTime = m_schedule.GetBackTimeInMinute();
             ComputePatience(backTime, leaveTime);
+
+            if(elevatorState == UserElevatorState.Waiting && ShouldReCall())
+            {
+                ElevatorCallManager.CallElevator(Mathf.RoundToInt(m_position.Y)); // send call again
+            }
         }
     }
 
@@ -164,7 +175,18 @@ public class ElevatorUser
         if(now < startMinute)
             now += 24 * 60; // same idea
 
+        m_lastPatience = m_patience;
         m_patience = 1.0f - Mathf.InverseLerp(startMinute, endMinute, now);
+    }
+
+    public bool ShouldReCall()
+    {
+        foreach(float t in UserManager.impatienceThresholds)
+        {
+            if(m_lastPatience > t && m_patience <= t)
+                return true;
+        }
+        return false;
     }
 
     public void SetHorizontalTargetNearestInside() { SetHorizontalTargetNearest(true); }

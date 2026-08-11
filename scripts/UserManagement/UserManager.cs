@@ -10,6 +10,8 @@ public partial class UserManager : Node
     [Export] private int startingUserCount = 5;
     [Export] private float addUserPeriod = 10.0f;
     [Export] private Control gameOverScreen;
+
+    public static float[] impatienceThresholds = [0.5f, 0.25f, 0.1f];
     private List<ElevatorUser> users = [];
 
     private double addUserDTCounter = 0.0f;
@@ -31,7 +33,15 @@ public partial class UserManager : Node
             u.Update(dt);
 
             if(u.elevatorIndex != -1)
+            {
                 u.m_position.Y = elevators[u.elevatorIndex].m_position;
+
+                // Manage floor button impatience press
+                if(u.ShouldReCall())
+                {
+                    elevators[u.elevatorIndex].RequestFloor(u.m_destination);
+                }
+            }
 
             if(u.NeedsALift())
                 usersToManage++;

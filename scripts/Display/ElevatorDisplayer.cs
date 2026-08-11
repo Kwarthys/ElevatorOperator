@@ -10,6 +10,7 @@ public partial class ElevatorDisplayer : Node2D
     [Export] private float sizeScreenRatio = 0.15f;
     [Export] private float signAnimationDuration = 1.0f;
     [Export] private AudioStream buttonSound;
+    [Export] public CruiseSoundManager cruiseSoundManager;
     private AudioStreamPlayer2D soundPlayer;
     private List<RichTextLabel> floorSigns = [];
     private List<float> animationTimers = [];
@@ -28,6 +29,8 @@ public partial class ElevatorDisplayer : Node2D
 
         soundPlayer = ScaleGenerator.GeneratePlayerForPitchedSound(buttonSound, soundScaleIndex, "FX");
         AddChild(soundPlayer);
+
+        cruiseSoundManager.Init(soundScaleIndex);
 
         for(int i = 0; i < 6; ++i)
         {

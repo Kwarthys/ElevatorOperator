@@ -11,6 +11,7 @@ public class Elevator
     public float m_doorPos { get; private set; } = 0.0f;
 
     private ElevatorDisplayer m_displayer;
+    private CruiseSoundManager m_soundManager;
 
     public bool forceDisplayUpdate = false;
 
@@ -27,6 +28,7 @@ public class Elevator
         m_doorSpeed = doorSpeed;
 
         m_displayer.Ready += () => m_displayer.UpdateDisplayPos(m_position, m_targetPosition);
+        m_soundManager = m_displayer.cruiseSoundManager;
     }
 
     public void Update(double dt)
@@ -45,6 +47,8 @@ public class Elevator
                 m_displayer.UpdateDisplayPos(m_position, m_targetPosition);
                 forceDisplayUpdate = false;
             }
+
+            m_soundManager.UpdateState(moving);
             return;
         }
 
@@ -53,6 +57,8 @@ public class Elevator
             moving = !Utils.SpeedMove(dt, m_speed, m_position, m_targetPosition, out float newPos);
             m_position = newPos;
         }
+
+        m_soundManager.UpdateState(moving);
 
         m_displayer.UpdateDisplayPos(m_position, m_targetPosition);
         forceDisplayUpdate = false;

@@ -1,11 +1,13 @@
-[gd_scene load_steps=8 format=3 uid="uid://dhjdx7hdvpyn5"]
+[gd_scene load_steps=10 format=3 uid="uid://dhjdx7hdvpyn5"]
 
 [ext_resource type="Script" uid="uid://mjkq6fmu5eud" path="res://scripts/Display/ElevatorDisplayer.cs" id="1_21owb"]
 [ext_resource type="AudioStream" uid="uid://dse886umcmk0q" path="res://sounds/TestWood_B.wav" id="2_01df7"]
 [ext_resource type="Texture2D" uid="uid://c4sd0162v3tg1" path="res://sprites/elevator_0.png" id="4_8tueb"]
 [ext_resource type="Texture2D" uid="uid://b3c28y8lncq8u" path="res://sprites/elevator_1.png" id="5_qnje6"]
 [ext_resource type="Texture2D" uid="uid://fshoxygwokv3" path="res://sprites/elevator_2.png" id="6_qu1q1"]
+[ext_resource type="Script" uid="uid://dpeykbfp4wx2b" path="res://scripts/Sound/CruiseSoundManager.cs" id="7_8tueb"]
 [ext_resource type="Texture2D" uid="uid://gb05orxhk5ga" path="res://sprites/elevator_3.png" id="7_65ule"]
+[ext_resource type="AudioStream" uid="uid://cljwodtjw5ee" path="res://sounds/ElevatorCruise.wav" id="8_qnje6"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_0u6rt"]
 animations = [{
@@ -27,7 +29,7 @@ animations = [{
 "speed": 1.0
 }]
 
-[node name="ElevatorDisplayer" type="Node2D" node_paths=PackedStringArray("elevator", "targetModel")]
+[node name="ElevatorDisplayer" type="Node2D" node_paths=PackedStringArray("elevator", "targetModel", "cruiseSoundManager")]
 script = ExtResource("1_21owb")
 elevator = NodePath("AnimatedSprite2D")
 targetModel = NodePath("Target")
@@ -36,6 +38,7 @@ activeSelectionColor = Color(0.827451, 0.84705883, 0, 1)
 sizeScreenRatio = 0.14
 signAnimationDuration = 0.75
 buttonSound = ExtResource("2_01df7")
+cruiseSoundManager = NodePath("CruiseSoundManager")
 
 [node name="Target" type="Sprite2D" parent="."]
 modulate = Color(1, 1, 1, 0.25882354)
@@ -47,3 +50,9 @@ texture = ExtResource("4_8tueb")
 scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_0u6rt")
 animation = &"doors"
+
+[node name="CruiseSoundManager" type="Node2D" parent="."]
+script = ExtResource("7_8tueb")
+cruiseSound = ExtResource("8_qnje6")
+maxVolumeDB = 0.0
+fadeInFadeOutTimers = Vector2(0.2, 0.3)
