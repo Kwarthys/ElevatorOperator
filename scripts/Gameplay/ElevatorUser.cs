@@ -44,7 +44,7 @@ public class ElevatorUser
         m_position.X = m_horizontalTarget;
     }
 
-    public void Update(double dt)
+    public void UpdateBehavior(double dt)
     {
         switch(scheduleState)
         {
@@ -53,7 +53,6 @@ public class ElevatorUser
             case UserScheduleState.Leaving: ManageLeaving(); break;
             case UserScheduleState.ComingBack: ManageComingBack(); break;
         }
-        UpdateWalk(dt);
     }
 
     public bool NeedsALift()
@@ -68,7 +67,7 @@ public class ElevatorUser
         }
     }
 
-    private void UpdateWalk(double dt)
+    public void UpdateWalk(double dt)
     {
         if(m_horizontalTarget != m_position.X)
         {

@@ -12,7 +12,6 @@ public partial class GameManager : Node
     [Export] private UserManager usersManager;
     [Export] private BackgroundDisplayer backgroundDisplayer;
     [Export] private GameClockManager gameClockManager;
-    [Export] private RichTextLabel chronoLabel;
 
     public float currentGameDuration { get; private set; } = 0.0f;
 
@@ -84,12 +83,7 @@ public partial class GameManager : Node
         gameClockManager.AdvanceClock(dt);
 
         if(usersManager.gameLost == false)
-        {
             currentGameDuration += (float)dt;
-            int sec = (int)currentGameDuration % 60;
-            int minutes = Mathf.FloorToInt(currentGameDuration / 60.0f);
-            chronoLabel.Text = (minutes < 10 ? "0" : "") + minutes + "'" + (sec < 10 ? "0" : "") + sec + '"';
-        }
     }
 
     private void UpdateSelectionDisplay()
@@ -103,7 +97,5 @@ public partial class GameManager : Node
         elevators.ForEach((e) => e.forceDisplayUpdate = true);
         backgroundDisplayer.UpdateScenery();
         usersManager.OnScreenResize();
-
-        chronoLabel.Position = new(DisplayUtils.screenSize.X - 100.0f, 5.0f);
     }
 }

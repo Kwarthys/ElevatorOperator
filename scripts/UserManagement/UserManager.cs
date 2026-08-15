@@ -10,6 +10,7 @@ public partial class UserManager : Node
     [Export] private int startingUserCount = 5;
     [Export] private float addUserPeriod = 10.0f;
     [Export] private Control gameOverScreen;
+    [Export] private EndGameAnimationDriver endGameAnimation;
 
     public static float[] impatienceThresholds = [0.5f, 0.25f, 0.1f];
     private List<ElevatorUser> users = [];
@@ -24,13 +25,17 @@ public partial class UserManager : Node
     public void UpdateUsers(double dt, List<Elevator> elevators)
     {
         usersDisplayer.DisplayUsers(users, dt);
-        ManageUserBoardOrLeaveElevators(elevators);
+
+        if(gameLost == false)
+            ManageUserBoardOrLeaveElevators(elevators);
 
         int usersToManage = 0;
 
         users.ForEach((u) =>
         {
-            u.Update(dt);
+            if(gameLost == false)
+                u.UpdateBehavior(dt);
+            u.UpdateWalk(dt);
 
             if(u.elevatorIndex != -1)
             {
@@ -50,13 +55,15 @@ public partial class UserManager : Node
             {
                 gameLost = true;
                 gameOverScreen.Visible = true;
+
+                endGameAnimation.Start();
             }
         });
 
         chaosMeter = Mathf.Min(1.0f, 1.0f * usersToManage / chaosMeterUserCountMax);
 
         if(gameLost)
-            return; // stop adding users when game is already lost
+            return; // stop adding users when game is lost
 
         addUserDTCounter += dt;
         while(addUserDTCounter > addUserPeriod)
