@@ -1,5 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://cnlmaafxbyqc6"]
+[gd_scene load_steps=3 format=3 uid="uid://cnlmaafxbyqc6"]
 
+[ext_resource type="Script" uid="uid://bam37mpbgbq3y" path="res://scripts/Gameplay/EndGameScreenManager.cs" id="1_7y8om"]
 [ext_resource type="Theme" uid="uid://cwe204j4axq50" path="res://scripts/UI/button_theme.tres" id="1_62ohe"]
 
 [node name="EndGameScreen" type="Control"]
@@ -7,6 +8,7 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 566.0
 offset_bottom = 601.0
+script = ExtResource("1_7y8om")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1
@@ -45,3 +47,5 @@ fit_content = true
 scroll_active = false
 autowrap_mode = 0
 horizontal_alignment = 1
+
+[connection signal="pressed" from="Button" to="." method="OnRestartButtonPressed"]

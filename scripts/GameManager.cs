@@ -5,6 +5,8 @@ using System.Linq;
 
 public partial class GameManager : Node
 {
+    private static GameManager Instance;
+
     [Export] public float elevatorSpeed = 1.0f;
     [Export] public float elevatorDoorSpeed = 1.0f;
     [Export] private Node sceneryNode;
@@ -13,6 +15,8 @@ public partial class GameManager : Node
     [Export] private BackgroundDisplayer backgroundDisplayer;
     [Export] private GameClockManager gameClockManager;
     [Export] private Button startGameButton;
+
+    [Export] private EndGameScreenManager endGameManager;
 
     public float currentGameDuration { get; private set; } = 0.0f;
 
@@ -23,6 +27,8 @@ public partial class GameManager : Node
 
     public override void _Ready()
     {
+        Instance = this;
+
         int elevatorCount = 3;
         for(int i = 0; i < elevatorCount; ++i)
         {
@@ -34,7 +40,8 @@ public partial class GameManager : Node
             elevatorDisplayer.horizontalRatio = (i + 1.0f) / (elevatorCount + 1.0f);
         }
 
-        usersManager.HideGameOverScreen();
+        endGameManager.Visible = false;
+        endGameManager.RegisterManager(this);
 
         GetViewport().SizeChanged += OnScreenResize;
         OnScreenResize();
@@ -47,7 +54,10 @@ public partial class GameManager : Node
         gameStarted = true;
 
         usersManager.InitUsers();
-        usersManager.HideGameOverScreen();
+        endGameManager.Visible = false;
+
+        foreach(Elevator e in elevators)
+            e.ClearFloorRequests();
     }
 
     public void OnInputUp()
@@ -100,6 +110,22 @@ public partial class GameManager : Node
         StartGame();
     }
 
+    public void OnRestartGameButtonClick()
+    {
+        GD.Print("Restart");
+        StartGame();
+    }
+
+    public static void OnGameLost()
+    {
+        Instance?.OnGameLost_Private();
+    }
+
+    private void OnGameLost_Private()
+    {
+        endGameManager.Visible = true;
+    }
+
     private void UpdateSelectionDisplay()
     {
         backgroundDisplayer.MoveSelection(1.0f * (selectedElevator + 1) / (elevators.Count + 1));
@@ -113,5 +139,8 @@ public partial class GameManager : Node
         usersManager.OnScreenResize();
 
         startGameButton.Position = (DisplayUtils.screenSize - startGameButton.Size) * 0.5f;
+
+        endGameManager.Size = new Vector2(0.5f, 0.75f) * DisplayUtils.screenSize;
+        endGameManager.Position = new Vector2(0.25f, 0.125f) * DisplayUtils.screenSize;
     }
 }

@@ -103,4 +103,10 @@ public class Elevator
         requestedFloorFlags &= ~(1 << floor);
         m_displayer.SetFloorSelection(requestedFloorFlags);
     }
+
+    public void ClearFloorRequests()
+    {
+        requestedFloorFlags = 0;
+        m_displayer.SetFloorSelection(0);
+    }
 }

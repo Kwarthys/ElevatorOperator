@@ -116,6 +116,15 @@ public partial class UsersDisplayer : Node
         }
     }
 
+    public void Reset()
+    {
+        foreach(KeyValuePair<ElevatorUser, UserSprite> pair in userToSpriteMap)
+        {
+            pair.Value.QueueFree();
+        }
+        userToSpriteMap.Clear();
+    }
+
     private void InstantiateNewPatienceBar()
     {
         patienceBars.Add(new());

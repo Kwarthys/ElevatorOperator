@@ -35,7 +35,7 @@ metadata/_snap_enabled = true
 script = ExtResource("1_w2twt")
 gameManager = NodePath("../GameManager")
 
-[node name="GameManager" type="Node" parent="." node_paths=PackedStringArray("sceneryNode", "usersManager", "backgroundDisplayer", "gameClockManager", "startGameButton")]
+[node name="GameManager" type="Node" parent="." node_paths=PackedStringArray("sceneryNode", "usersManager", "backgroundDisplayer", "gameClockManager", "startGameButton", "endGameManager")]
 script = ExtResource("2_pw63i")
 elevatorSpeed = 4.0
 elevatorDoorSpeed = 1.2
@@ -45,6 +45,7 @@ usersManager = NodePath("../UserManager")
 backgroundDisplayer = NodePath("../BackgroundDisplayer")
 gameClockManager = NodePath("../GameClockManager")
 startGameButton = NodePath("../Scenery/StartGameButton")
+endGameManager = NodePath("../EndGameScreen")
 
 [node name="BackgroundDisplayer" type="Node" parent="." node_paths=PackedStringArray("backgroundHolder", "backgroundTextsHolder", "elevatorButtonCallHolder", "callManager")]
 script = ExtResource("5_gubc5")
@@ -56,12 +57,11 @@ backgroundTextsHolder = NodePath("../Scenery/FloorTextsHolder")
 elevatorButtonCallHolder = NodePath("../Scenery/ElevatorButtonsHolder")
 callManager = NodePath("../ElevatorCallManager")
 
-[node name="UserManager" type="Node" parent="." node_paths=PackedStringArray("usersDisplayer", "gameOverScreen", "endGameAnimation")]
+[node name="UserManager" type="Node" parent="." node_paths=PackedStringArray("usersDisplayer", "endGameAnimation")]
 script = ExtResource("5_rt2n2")
 usersDisplayer = NodePath("UsersDisplayer")
 startingUserCount = 30
 addUserPeriod = 2.0
-gameOverScreen = NodePath("../EndGameScreen")
 endGameAnimation = NodePath("EndGameAnimator")
 chaosMeterUserCountMax = 40
 

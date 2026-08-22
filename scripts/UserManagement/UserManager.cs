@@ -9,7 +9,6 @@ public partial class UserManager : Node
     [Export] public float usersWalkSpeed = 0.5f;
     [Export] private int startingUserCount = 5;
     [Export] private float addUserPeriod = 10.0f;
-    [Export] private Control gameOverScreen;
     [Export] private EndGameAnimationDriver endGameAnimation;
 
     public static float[] impatienceThresholds = [0.5f, 0.25f, 0.1f];
@@ -54,8 +53,7 @@ public partial class UserManager : Node
             if(gameLost == false && u.GetPatience() == 0.0f)
             {
                 gameLost = true;
-                gameOverScreen.Visible = true;
-
+                GameManager.OnGameLost();
                 endGameAnimation.Start();
             }
         });
@@ -73,19 +71,16 @@ public partial class UserManager : Node
         }
     }
 
-    public void HideGameOverScreen() { gameOverScreen.Visible = false; }
-
     public void OnScreenResize()
     {
         usersDisplayer.OnScreenResize();
-
-        gameOverScreen.Size = new Vector2(0.5f, 0.75f) * DisplayUtils.screenSize;
-        gameOverScreen.Position = new Vector2(0.25f, 0.125f) * DisplayUtils.screenSize;
     }
 
     public void InitUsers()
     {
+        usersDisplayer.Reset();
         users.Clear();
+        gameLost = false;
         for(int i = 0; i < startingUserCount; ++i)
         {
             GenerateUser();
