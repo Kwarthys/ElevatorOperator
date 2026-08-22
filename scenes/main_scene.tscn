@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://cqv52q0wus5rh"]
+[gd_scene load_steps=23 format=3 uid="uid://cqv52q0wus5rh"]
 
 [ext_resource type="Script" uid="uid://c64u4diqj8njf" path="res://scripts/InputManager.cs" id="1_w2twt"]
 [ext_resource type="Script" uid="uid://dp4uxx5m0q0d1" path="res://scripts/GameManager.cs" id="2_pw63i"]
@@ -19,6 +19,8 @@
 [ext_resource type="AudioStream" uid="uid://bqvklpawbitn7" path="res://Music/ElevatorOperator_Chill.wav" id="13_bcnxi"]
 [ext_resource type="AudioStream" uid="uid://cqc5qaniajerw" path="res://Music/ElevatorOperator_Tense.wav" id="14_7nt27"]
 [ext_resource type="AudioStream" uid="uid://bmac1ic7b81tl" path="res://Music/ElevatorOperator_Chaos.wav" id="15_k6f3i"]
+[ext_resource type="Theme" uid="uid://cwe204j4axq50" path="res://scripts/UI/button_theme.tres" id="20_k6f3i"]
+[ext_resource type="PackedScene" uid="uid://cnlmaafxbyqc6" path="res://scenes/end_game_screen.tscn" id="21_xdqt8"]
 
 [sub_resource type="Gradient" id="Gradient_gubc5"]
 interpolation_mode = 1
@@ -33,7 +35,7 @@ metadata/_snap_enabled = true
 script = ExtResource("1_w2twt")
 gameManager = NodePath("../GameManager")
 
-[node name="GameManager" type="Node" parent="." node_paths=PackedStringArray("sceneryNode", "usersManager", "backgroundDisplayer", "gameClockManager")]
+[node name="GameManager" type="Node" parent="." node_paths=PackedStringArray("sceneryNode", "usersManager", "backgroundDisplayer", "gameClockManager", "startGameButton")]
 script = ExtResource("2_pw63i")
 elevatorSpeed = 4.0
 elevatorDoorSpeed = 1.2
@@ -42,6 +44,7 @@ elevatorDisplayerScene = ExtResource("3_7ykc4")
 usersManager = NodePath("../UserManager")
 backgroundDisplayer = NodePath("../BackgroundDisplayer")
 gameClockManager = NodePath("../GameClockManager")
+startGameButton = NodePath("../Scenery/StartGameButton")
 
 [node name="BackgroundDisplayer" type="Node" parent="." node_paths=PackedStringArray("backgroundHolder", "backgroundTextsHolder", "elevatorButtonCallHolder", "callManager")]
 script = ExtResource("5_gubc5")
@@ -58,7 +61,7 @@ script = ExtResource("5_rt2n2")
 usersDisplayer = NodePath("UsersDisplayer")
 startingUserCount = 30
 addUserPeriod = 2.0
-gameOverScreen = NodePath("../Scenery/GameOverText")
+gameOverScreen = NodePath("../EndGameScreen")
 endGameAnimation = NodePath("EndGameAnimator")
 chaosMeterUserCountMax = 40
 
@@ -173,22 +176,25 @@ autowrap_mode = 0
 script = ExtResource("10_6wevv")
 userManager = NodePath("../../UserManager")
 
-[node name="GameOverText" type="RichTextLabel" parent="Scenery"]
-visible = false
-clip_contents = false
-offset_left = 469.0
-offset_top = 300.0
-offset_right = 912.0
-offset_bottom = 396.0
-scale = Vector2(0.5, 0.5)
-mouse_filter = 2
-theme_override_colors/default_color = Color(1, 0.15294118, 0.2901961, 0.77254903)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 15
-theme_override_font_sizes/normal_font_size = 70
-text = "You're Fired !"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="StartGameButton" type="Button" parent="Scenery"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 526.0
+offset_top = 309.0
+offset_right = 622.0
+offset_bottom = 340.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("20_k6f3i")
+text = "Start Game"
+
+[node name="EndGameScreen" parent="." instance=ExtResource("21_xdqt8")]
+offset_left = -793.0
+offset_top = 418.0
+offset_right = -793.0
+offset_bottom = 418.0
+
+[connection signal="pressed" from="Scenery/StartGameButton" to="GameManager" method="OnStartGameButtonClick"]

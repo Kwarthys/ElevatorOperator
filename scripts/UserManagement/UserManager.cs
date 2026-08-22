@@ -73,13 +73,19 @@ public partial class UserManager : Node
         }
     }
 
+    public void HideGameOverScreen() { gameOverScreen.Visible = false; }
+
     public void OnScreenResize()
     {
         usersDisplayer.OnScreenResize();
+
+        gameOverScreen.Size = new Vector2(0.5f, 0.75f) * DisplayUtils.screenSize;
+        gameOverScreen.Position = new Vector2(0.25f, 0.125f) * DisplayUtils.screenSize;
     }
 
     public void InitUsers()
     {
+        users.Clear();
         for(int i = 0; i < startingUserCount; ++i)
         {
             GenerateUser();

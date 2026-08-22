@@ -12,25 +12,17 @@ public partial class GameManager : Node
     [Export] private UserManager usersManager;
     [Export] private BackgroundDisplayer backgroundDisplayer;
     [Export] private GameClockManager gameClockManager;
+    [Export] private Button startGameButton;
 
     public float currentGameDuration { get; private set; } = 0.0f;
 
     private List<Elevator> elevators = [];
 
     private int selectedElevator = 0;
+    private bool gameStarted = false;
 
     public override void _Ready()
     {
-        StartGame();
-    }
-
-    public void StartGame()
-    {
-        StatisticsManager.Reset();
-        currentGameDuration = 0.0f;
-
-        usersManager.InitUsers();
-
         int elevatorCount = 3;
         for(int i = 0; i < elevatorCount; ++i)
         {
@@ -42,8 +34,20 @@ public partial class GameManager : Node
             elevatorDisplayer.horizontalRatio = (i + 1.0f) / (elevatorCount + 1.0f);
         }
 
+        usersManager.HideGameOverScreen();
+
         GetViewport().SizeChanged += OnScreenResize;
         OnScreenResize();
+    }
+
+    public void StartGame()
+    {
+        StatisticsManager.Reset();
+        currentGameDuration = 0.0f;
+        gameStarted = true;
+
+        usersManager.InitUsers();
+        usersManager.HideGameOverScreen();
     }
 
     public void OnInputUp()
@@ -77,13 +81,23 @@ public partial class GameManager : Node
 
     public override void _Process(double dt)
     {
-        elevators.ForEach((e) => e.Update(dt));
+        elevators.ForEach((e) => e.Update(dt)); // Let player move elevator even before the start
+
+        if(gameStarted == false)
+            return;
+
         usersManager.UpdateUsers(dt, elevators);
 
         gameClockManager.AdvanceClock(dt);
 
         if(usersManager.gameLost == false)
             currentGameDuration += (float)dt;
+    }
+
+    public void OnStartGameButtonClick()
+    {
+        startGameButton.Visible = false;
+        StartGame();
     }
 
     private void UpdateSelectionDisplay()
@@ -97,5 +111,7 @@ public partial class GameManager : Node
         elevators.ForEach((e) => e.forceDisplayUpdate = true);
         backgroundDisplayer.UpdateScenery();
         usersManager.OnScreenResize();
+
+        startGameButton.Position = (DisplayUtils.screenSize - startGameButton.Size) * 0.5f;
     }
 }

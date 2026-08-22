@@ -1,0 +1,47 @@
+[gd_scene load_steps=2 format=3 uid="uid://cnlmaafxbyqc6"]
+
+[ext_resource type="Theme" uid="uid://cwe204j4axq50" path="res://scripts/UI/button_theme.tres" id="1_62ohe"]
+
+[node name="EndGameScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 566.0
+offset_bottom = 601.0
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.41960785)
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -44.0
+offset_top = -15.5
+offset_right = 44.0
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_62ohe")
+text = "Play Again"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+theme_override_font_sizes/normal_font_size = 35
+text = "Game Over !"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
