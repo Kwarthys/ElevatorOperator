@@ -3,13 +3,15 @@
 [ext_resource type="Script" uid="uid://bam37mpbgbq3y" path="res://scripts/Gameplay/EndGameScreenManager.cs" id="1_7y8om"]
 [ext_resource type="Theme" uid="uid://cwe204j4axq50" path="res://scripts/UI/button_theme.tres" id="1_62ohe"]
 
-[node name="EndGameScreen" type="Control" node_paths=PackedStringArray("statsText")]
+[node name="EndGameScreen" type="Control" node_paths=PackedStringArray("statsText", "graph")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 566.0
 offset_bottom = 601.0
 script = ExtResource("1_7y8om")
-statsText = NodePath("MarginContainer/Control/HBoxContainer/ValueTexts")
+statsText = NodePath("MarginContainer/Control/VBoxContainer/HBoxContainer/ValueTexts")
+graph = NodePath("MarginContainer/Control/VBoxContainer/TextureRect")
+graphColor = Color(0.96862745, 0.9843137, 0.37254903, 1)
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1
@@ -35,27 +37,16 @@ theme_override_constants/margin_bottom = 30
 [node name="Control" type="Control" parent="MarginContainer"]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="MarginContainer/Control"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Control"]
 layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -78.5
-offset_top = -50.0
-offset_right = 78.5
-grow_horizontal = 2
-grow_vertical = 0
-theme = ExtResource("1_62ohe")
-text = "Play Again"
-
-[node name="GameOver" type="RichTextLabel" parent="MarginContainer/Control"]
-layout_mode = 1
-anchors_preset = 10
+anchors_preset = 15
 anchor_right = 1.0
-offset_bottom = 49.0
+anchor_bottom = 1.0
 grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GameOver" type="RichTextLabel" parent="MarginContainer/Control/VBoxContainer"]
+layout_mode = 2
 theme_override_font_sizes/normal_font_size = 35
 text = "Game Over !"
 fit_content = true
@@ -63,23 +54,18 @@ scroll_active = false
 autowrap_mode = 0
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Control"]
-layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -63.0
-offset_bottom = 63.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Spacer2" type="Control" parent="MarginContainer/Control/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Control/VBoxContainer"]
+layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="KeysText" type="RichTextLabel" parent="MarginContainer/Control/HBoxContainer"]
+[node name="KeysText" type="RichTextLabel" parent="MarginContainer/Control/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_colors/default_color = Color(0.9843137, 1, 0.3764706, 1)
-theme_override_font_sizes/normal_font_size = 30
-theme_override_font_sizes/bold_font_size = 30
+theme_override_font_sizes/normal_font_size = 25
 text = "Duration:
 Users:
 Elevator Trips:"
@@ -87,13 +73,13 @@ fit_content = true
 scroll_active = false
 autowrap_mode = 0
 
-[node name="Spacer" type="Control" parent="MarginContainer/Control/HBoxContainer"]
+[node name="Spacer" type="Control" parent="MarginContainer/Control/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ValueTexts" type="RichTextLabel" parent="MarginContainer/Control/HBoxContainer"]
+[node name="ValueTexts" type="RichTextLabel" parent="MarginContainer/Control/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/normal_font_size = 30
+theme_override_font_sizes/normal_font_size = 25
 text = "Some
 Moult
 Many"
@@ -102,4 +88,31 @@ scroll_active = false
 autowrap_mode = 0
 horizontal_alignment = 2
 
-[connection signal="pressed" from="MarginContainer/Control/Button" to="." method="OnRestartButtonPressed"]
+[node name="Spacer3" type="Control" parent="MarginContainer/Control/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/Control/VBoxContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/Control/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 18
+text = "Concurent elevator users"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+
+[node name="Spacer4" type="Control" parent="MarginContainer/Control/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="Button" type="Button" parent="MarginContainer/Control/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("1_62ohe")
+text = "Play Again"
+
+[connection signal="pressed" from="MarginContainer/Control/VBoxContainer/Button" to="." method="OnRestartButtonPressed"]

@@ -61,7 +61,7 @@ callManager = NodePath("../ElevatorCallManager")
 script = ExtResource("5_rt2n2")
 usersDisplayer = NodePath("UsersDisplayer")
 startingUserCount = 30
-addUserPeriod = 2.0
+addUserPeriod = 2.5
 endGameAnimation = NodePath("EndGameAnimator")
 chaosMeterUserCountMax = 40
 

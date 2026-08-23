@@ -63,6 +63,8 @@ public partial class UserManager : Node
         if(gameLost)
             return; // stop adding users when game is lost
 
+        StatisticsManager.registerFrameUsers(usersToManage);
+
         addUserDTCounter += dt;
         while(addUserDTCounter > addUserPeriod)
         {

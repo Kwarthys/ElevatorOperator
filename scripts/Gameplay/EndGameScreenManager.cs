@@ -4,6 +4,8 @@ using System;
 public partial class EndGameScreenManager : Control
 {
     [Export] private RichTextLabel statsText;
+    [Export] private TextureRect graph;
+    [Export] private Color graphColor;
     private GameManager gameManager;
 
     public enum EndScreenStat { duration, userCount, trips };
@@ -26,6 +28,11 @@ public partial class EndGameScreenManager : Control
         }
 
         UpdateText();
+    }
+
+    public void GenerateEndGameGraph(int width, int height)
+    {
+        graph.Texture = StatisticsManager.GetFrameUsersGraph(width, height, graphColor);
     }
 
     private void UpdateText()

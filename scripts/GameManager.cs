@@ -30,7 +30,7 @@ public partial class GameManager : Node
         Instance = this;
 
         int elevatorCount = 3;
-        for (int i = 0; i < elevatorCount; ++i)
+        for(int i = 0; i < elevatorCount; ++i)
         {
             ElevatorDisplayer elevatorDisplayer = elevatorDisplayerScene.Instantiate<ElevatorDisplayer>();
             elevatorDisplayer.soundScaleIndex = 2 * i;
@@ -56,13 +56,13 @@ public partial class GameManager : Node
         usersManager.InitUsers();
         endGameManager.Visible = false;
 
-        foreach (Elevator e in elevators)
+        foreach(Elevator e in elevators)
             e.ClearFloorRequests();
     }
 
     public void OnInputUp()
     {
-        if (elevators[selectedElevator].m_targetPosition < 5.0f)
+        if(elevators[selectedElevator].m_targetPosition < 5.0f)
         {
             elevators[selectedElevator].m_targetPosition += 1.0f;
             elevators[selectedElevator].forceDisplayUpdate = true;
@@ -70,7 +70,7 @@ public partial class GameManager : Node
     }
     public void OnInputDown()
     {
-        if (elevators[selectedElevator].m_targetPosition > 0)
+        if(elevators[selectedElevator].m_targetPosition > 0)
         {
             elevators[selectedElevator].m_targetPosition -= 1.0f;
             elevators[selectedElevator].forceDisplayUpdate = true;
@@ -78,13 +78,13 @@ public partial class GameManager : Node
     }
     public void OnInputLeft()
     {
-        if (selectedElevator - 1 >= 0)
+        if(selectedElevator - 1 >= 0)
             selectedElevator--;
         UpdateSelectionDisplay();
     }
     public void OnInputRight()
     {
-        if (selectedElevator + 1 < elevators.Count)
+        if(selectedElevator + 1 < elevators.Count)
             selectedElevator++;
         UpdateSelectionDisplay();
     }
@@ -93,14 +93,14 @@ public partial class GameManager : Node
     {
         elevators.ForEach((e) => e.Update(dt)); // Let player move elevator even before the start
 
-        if (gameStarted == false)
+        if(gameStarted == false)
             return;
 
         usersManager.UpdateUsers(dt, elevators);
 
         gameClockManager.AdvanceClock(dt);
 
-        if (usersManager.gameLost == false)
+        if(usersManager.gameLost == false)
             currentGameDuration += (float)dt;
     }
 
@@ -128,6 +128,8 @@ public partial class GameManager : Node
         endGameManager.SetStat(EndGameScreenManager.EndScreenStat.duration, GameClockManager.clock.AsDurationString());
         endGameManager.SetStat(EndGameScreenManager.EndScreenStat.userCount, usersManager.GetUserCount().ToString());
         endGameManager.SetStat(EndGameScreenManager.EndScreenStat.trips, StatisticsManager.numberOfTravels.ToString());
+
+        endGameManager.GenerateEndGameGraph(Mathf.FloorToInt(endGameManager.Size.X * 0.75f), Mathf.FloorToInt(endGameManager.Size.Y * 0.15f));
     }
 
     private void UpdateSelectionDisplay()
