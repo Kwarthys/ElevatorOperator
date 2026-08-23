@@ -51,4 +51,9 @@ public class GameClock
     {
         return "Day " + days + ", " + hours + ":" + minutes + ":" + seconds;
     }
+
+    public string AsDurationString()
+    {
+        return days + "day" + (days > 1 ? "s" : "") + ", " + hours + "h " + minutes + "m and " + Mathf.FloorToInt(seconds) + "s";
+    }
 }
