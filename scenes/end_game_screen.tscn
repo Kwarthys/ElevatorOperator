@@ -1,7 +1,15 @@
-[gd_scene load_steps=3 format=3 uid="uid://cnlmaafxbyqc6"]
+[gd_scene load_steps=8 format=3 uid="uid://cnlmaafxbyqc6"]
 
 [ext_resource type="Script" uid="uid://bam37mpbgbq3y" path="res://scripts/Gameplay/EndGameScreenManager.cs" id="1_7y8om"]
 [ext_resource type="Theme" uid="uid://cwe204j4axq50" path="res://scripts/UI/button_theme.tres" id="1_62ohe"]
+[ext_resource type="Texture2D" uid="uid://ddhack815l5u7" path="res://sprites/Achv_1.png" id="2_ouj7k"]
+[ext_resource type="Texture2D" uid="uid://18hkuc0hs0en" path="res://sprites/Achv_2.png" id="3_4mw7a"]
+[ext_resource type="Texture2D" uid="uid://de75edp8ujsc7" path="res://sprites/Achv_3.png" id="4_0x1mo"]
+[ext_resource type="Texture2D" uid="uid://ehpdx3syyavk" path="res://sprites/Achv_4.png" id="5_wjngy"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_7y8om"]
+width = 100
+height = 50
 
 [node name="EndGameScreen" type="Control" node_paths=PackedStringArray("statsText", "graph")]
 layout_mode = 3
@@ -93,8 +101,56 @@ layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.5
 
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/Control/VBoxContainer"]
+custom_minimum_size = Vector2(0, 75)
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/Control/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("2_ouj7k")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="TextureRect2" type="TextureRect" parent="MarginContainer/Control/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("3_4mw7a")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="TextureRect3" type="TextureRect" parent="MarginContainer/Control/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("4_0x1mo")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="TextureRect4" type="TextureRect" parent="MarginContainer/Control/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("5_wjngy")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="Spacer6" type="Control" parent="MarginContainer/Control/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.2
+
+[node name="ProgressBar" type="ProgressBar" parent="MarginContainer/Control/VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+value = 68.08
+show_percentage = false
+
+[node name="Spacer4" type="Control" parent="MarginContainer/Control/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/Control/VBoxContainer"]
 layout_mode = 2
+texture = SubResource("NoiseTexture2D_7y8om")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/Control/VBoxContainer"]
 layout_mode = 2
@@ -105,7 +161,7 @@ scroll_active = false
 autowrap_mode = 0
 horizontal_alignment = 1
 
-[node name="Spacer4" type="Control" parent="MarginContainer/Control/VBoxContainer"]
+[node name="Spacer5" type="Control" parent="MarginContainer/Control/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.5
