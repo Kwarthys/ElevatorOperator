@@ -1,11 +1,13 @@
 using Godot;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 public partial class EndGameScreenManager : Control
 {
     [Export] private RichTextLabel statsText;
     [Export] private TextureRect graph;
     [Export] private Color graphColor;
+    [Export] private ProgressionDisplayModule progressionModule;
     private GameManager gameManager;
 
     public enum EndScreenStat { duration, userCount, trips };
@@ -33,6 +35,11 @@ public partial class EndGameScreenManager : Control
     public void GenerateEndGameGraph(int width, int height)
     {
         graph.Texture = StatisticsManager.GetFrameUsersGraph(width, height, graphColor);
+    }
+
+    public void StartProgressionAnimation(float daysTarget)
+    {
+        progressionModule.AnimateTo(daysTarget);
     }
 
     private void UpdateText()

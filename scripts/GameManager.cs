@@ -130,6 +130,8 @@ public partial class GameManager : Node
         endGameManager.SetStat(EndGameScreenManager.EndScreenStat.trips, StatisticsManager.numberOfTravels.ToString());
 
         endGameManager.GenerateEndGameGraph(Mathf.FloorToInt(endGameManager.Size.X * 0.75f), Mathf.FloorToInt(endGameManager.Size.Y * 0.15f));
+
+        endGameManager.StartProgressionAnimation(GameClockManager.clock.days + GameClockManager.clock.hours / 24.0f);
     }
 
     private void UpdateSelectionDisplay()

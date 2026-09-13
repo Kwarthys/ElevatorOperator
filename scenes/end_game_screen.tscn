@@ -1,17 +1,19 @@
-[gd_scene load_steps=8 format=3 uid="uid://cnlmaafxbyqc6"]
+[gd_scene load_steps=10 format=3 uid="uid://cnlmaafxbyqc6"]
 
 [ext_resource type="Script" uid="uid://bam37mpbgbq3y" path="res://scripts/Gameplay/EndGameScreenManager.cs" id="1_7y8om"]
 [ext_resource type="Theme" uid="uid://cwe204j4axq50" path="res://scripts/UI/button_theme.tres" id="1_62ohe"]
+[ext_resource type="Script" uid="uid://doulb33l2vx8c" path="res://scripts/Display/ProgressionDisplayModule.cs" id="2_4mw7a"]
 [ext_resource type="Texture2D" uid="uid://ddhack815l5u7" path="res://sprites/Achv_1.png" id="2_ouj7k"]
 [ext_resource type="Texture2D" uid="uid://18hkuc0hs0en" path="res://sprites/Achv_2.png" id="3_4mw7a"]
 [ext_resource type="Texture2D" uid="uid://de75edp8ujsc7" path="res://sprites/Achv_3.png" id="4_0x1mo"]
 [ext_resource type="Texture2D" uid="uid://ehpdx3syyavk" path="res://sprites/Achv_4.png" id="5_wjngy"]
+[ext_resource type="Theme" uid="uid://b175kfargrbmd" path="res://UI/progressionSliderTheme.tres" id="7_0x1mo"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_7y8om"]
 width = 100
 height = 50
 
-[node name="EndGameScreen" type="Control" node_paths=PackedStringArray("statsText", "graph")]
+[node name="EndGameScreen" type="Control" node_paths=PackedStringArray("statsText", "graph", "progressionModule")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 566.0
@@ -20,6 +22,14 @@ script = ExtResource("1_7y8om")
 statsText = NodePath("MarginContainer/Control/VBoxContainer/HBoxContainer/ValueTexts")
 graph = NodePath("MarginContainer/Control/VBoxContainer/TextureRect")
 graphColor = Color(0.96862745, 0.9843137, 0.37254903, 1)
+progressionModule = NodePath("ProgressionDisplayModule")
+
+[node name="ProgressionDisplayModule" type="Node" parent="." node_paths=PackedStringArray("progressionSprites", "progressBar")]
+script = ExtResource("2_4mw7a")
+progressionSprites = [NodePath("../MarginContainer/Control/VBoxContainer/HBoxContainer2/TextureRect"), NodePath("../MarginContainer/Control/VBoxContainer/HBoxContainer2/TextureRect2"), NodePath("../MarginContainer/Control/VBoxContainer/HBoxContainer2/TextureRect3"), NodePath("../MarginContainer/Control/VBoxContainer/HBoxContainer2/TextureRect4")]
+progressionThresholdsDays = Array[float]([1.0, 2.0, 3.0, 4.0])
+progressBar = NodePath("../MarginContainer/Control/VBoxContainer/HSlider")
+animationDuration = 2.0
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1
@@ -137,11 +147,15 @@ layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.2
 
-[node name="ProgressBar" type="ProgressBar" parent="MarginContainer/Control/VBoxContainer"]
-custom_minimum_size = Vector2(0, 20)
+[node name="HSlider" type="HSlider" parent="MarginContainer/Control/VBoxContainer"]
 layout_mode = 2
-value = 68.08
-show_percentage = false
+theme = ExtResource("7_0x1mo")
+max_value = 1.0
+step = 0.001
+editable = false
+scrollable = false
+tick_count = 5
+ticks_position = 2
 
 [node name="Spacer4" type="Control" parent="MarginContainer/Control/VBoxContainer"]
 layout_mode = 2

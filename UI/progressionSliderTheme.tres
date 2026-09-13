@@ -1,0 +1,12 @@
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://b175kfargrbmd"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_td8mk"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_td8mk"]
+bg_color = Color(1, 0.9490196, 0, 1)
+corner_radius_top_left = 4
+corner_radius_bottom_left = 4
+
+[resource]
+HSlider/icons/grabber_disabled = SubResource("ImageTexture_td8mk")
+HSlider/styles/grabber_area = SubResource("StyleBoxFlat_td8mk")
