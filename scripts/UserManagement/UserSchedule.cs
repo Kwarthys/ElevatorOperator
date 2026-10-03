@@ -20,11 +20,11 @@ public class UserSchedule
         int timeInMinutes = GameClockManager.clock.TimeOfDayInMinutes();
         if(leaveHour < backHour)
         {
-            return timeInMinutes > leaveInMinutes && timeInMinutes < backInMinutes;
+            return timeInMinutes >= leaveInMinutes && timeInMinutes < backInMinutes;
         }
         else
         {
-            return timeInMinutes < backInMinutes || timeInMinutes > leaveInMinutes;
+            return timeInMinutes < backInMinutes || timeInMinutes >= leaveInMinutes;
         }
     }
 

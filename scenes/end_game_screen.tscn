@@ -13,13 +13,15 @@
 width = 100
 height = 50
 
-[node name="EndGameScreen" type="Control" node_paths=PackedStringArray("statsText", "graph", "progressionModule")]
+[node name="EndGameScreen" type="Control" node_paths=PackedStringArray("statsText", "explanationText", "graph", "progressionModule")]
+z_index = 4096
 layout_mode = 3
 anchors_preset = 0
 offset_right = 566.0
 offset_bottom = 601.0
 script = ExtResource("1_7y8om")
 statsText = NodePath("MarginContainer/Control/VBoxContainer/HBoxContainer/ValueTexts")
+explanationText = NodePath("MarginContainer/Control/VBoxContainer/ExplanationText")
 graph = NodePath("MarginContainer/Control/VBoxContainer/TextureRect")
 graphColor = Color(0.96862745, 0.9843137, 0.37254903, 1)
 progressionModule = NodePath("ProgressionDisplayModule")
@@ -72,6 +74,20 @@ scroll_active = false
 autowrap_mode = 0
 horizontal_alignment = 1
 
+[node name="Spacer7" type="Control" parent="MarginContainer/Control/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ExplanationText" type="RichTextLabel" parent="MarginContainer/Control/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.78431374, 0.39215687, 0.39215687, 1)
+theme_override_font_sizes/normal_font_size = 20
+text = "Lost because of M.XBean missing his bus to work keoa rieakjnhe oakdldi aoeriozer ankzeope ncjaoe nfiieor lzier okef lizenf likendb ueh ilkz"
+fit_content = true
+scroll_active = false
+autowrap_mode = 2
+horizontal_alignment = 1
+
 [node name="Spacer2" type="Control" parent="MarginContainer/Control/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -85,7 +101,7 @@ layout_mode = 2
 theme_override_colors/default_color = Color(0.9843137, 1, 0.3764706, 1)
 theme_override_font_sizes/normal_font_size = 25
 text = "Duration:
-Users:
+Inhabitants:
 Elevator Trips:"
 fit_content = true
 scroll_active = false

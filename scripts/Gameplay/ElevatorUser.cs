@@ -21,11 +21,12 @@ public class ElevatorUser
 
     private UserSchedule m_schedule;
 
+    public UserSchedule GetSchedule() { return m_schedule; }
+
     public ElevatorUser(int buildingDestination, float walkSpeed)
     {
         insideDestination = buildingDestination;
         m_walkSpeed = walkSpeed;
-
 
         m_schedule = UserSchedule.Generate();
         if(m_schedule.ShouldLeave())

@@ -13,6 +13,11 @@ public partial class GameClockManager : Node
         clock.seconds += _dt * 3600.0 / gameHourDuration_sec;
         clock.Trim();
     }
+
+    public void Reset()
+    {
+        clock.Reset();
+    }
 }
 
 // Clock used to drive characters behavior and user display
@@ -45,6 +50,14 @@ public class GameClock
     public int TimeOfDayInMinutes()
     {
         return hours * 60 + minutes;
+    }
+
+    public void Reset()
+    {
+        days = 0;
+        hours = 0;
+        minutes = 0;
+        seconds = 0.0f;
     }
 
     public override string ToString()

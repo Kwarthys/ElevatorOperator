@@ -53,6 +53,8 @@ public partial class UserManager : Node
             if(gameLost == false && u.GetPatience() == 0.0f)
             {
                 gameLost = true;
+                StatisticsManager.userLostSchedule = u.GetSchedule();
+                StatisticsManager.userLostID = users.IndexOf(u) + 1;
                 GameManager.OnGameLost();
                 endGameAnimation.Start();
             }

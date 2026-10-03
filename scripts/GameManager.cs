@@ -50,6 +50,7 @@ public partial class GameManager : Node
     public void StartGame()
     {
         StatisticsManager.Reset();
+        gameClockManager.Reset();
         currentGameDuration = 0.0f;
         gameStarted = true;
 
@@ -128,6 +129,8 @@ public partial class GameManager : Node
         endGameManager.SetStat(EndGameScreenManager.EndScreenStat.duration, GameClockManager.clock.AsDurationString());
         endGameManager.SetStat(EndGameScreenManager.EndScreenStat.userCount, usersManager.GetUserCount().ToString());
         endGameManager.SetStat(EndGameScreenManager.EndScreenStat.trips, StatisticsManager.numberOfTravels.ToString());
+
+        endGameManager.UpdateLossExplanation();
 
         endGameManager.GenerateEndGameGraph(Mathf.FloorToInt(endGameManager.Size.X * 0.75f), Mathf.FloorToInt(endGameManager.Size.Y * 0.15f));
 

@@ -7,6 +7,9 @@ using System.Runtime.CompilerServices;
 
 public static class StatisticsManager
 {
+    public static UserSchedule userLostSchedule;
+    public static int userLostID = 0;
+
     public static int numberOfTravels { get; private set; } = 0;
     public static List<int> usersPerFrame = new();
 
