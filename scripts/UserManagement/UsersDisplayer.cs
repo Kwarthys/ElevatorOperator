@@ -56,6 +56,8 @@ public partial class UsersDisplayer : Node
             float swaySpeed = Mathf.Lerp(swaySpeed_MinMax.X, swaySpeed_MinMax.Y, userImpatience * userImpatience * userImpatience);
             sprite.Update(dt, swaySpeed);
 
+            sprite.ZIndex = (int)(1000.0f * userImpatience); // Display more impatient users on top of others for visibility
+
             if(displayDebugTexts)
             {
                 debugTexts[i].Text = users[i].GetScheduleDebugText();
