@@ -137,15 +137,23 @@ public partial class UserManager : Node
                     user.elevatorIndex = -1;
                     user.elevatorState = ElevatorUser.UserElevatorState.Leaving;
                 }
+                else if(elevators[user.elevatorIndex].IsBroken())
+                {
+                    user.elevatorIndex = -1;
+                    user.targetElevatorIndex = -1;
+                    user.SetHorizontalTargetNearestInside();
+                    user.elevatorState = ElevatorUser.UserElevatorState.Leaving;
+                }
             }
             else if(user.m_destination != user.m_position.Y) // User wants to use an elevator but is not in one
             {
                 if(user.targetElevatorIndex != -1)
                 {
                     // user is already running toward an elevator, is it still available ?
-                    if(elevators[user.targetElevatorIndex].AreDoorsBlocking())
+                    Elevator elevator = elevators[user.targetElevatorIndex];
+                    if(elevator.AreDoorsBlocking() || elevator.IsBroken())
                     {
-                        // Elevator just left right in front of this user's face --> todo get angry
+                        // Elevator just left (or broke) right in front of this user's face --> todo get angry
                         user.elevatorState = ElevatorUser.UserElevatorState.Waiting;
                         user.SetHorizontalTargetNearestInside();
                         user.targetElevatorIndex = -1;
@@ -167,12 +175,43 @@ public partial class UserManager : Node
                 }
                 else // User is waiting
                 {
-                    int usersFloor = Mathf.RoundToInt(user.m_position.Y);
-                    int userElevatorLocalID = pos.IndexOf(usersFloor);
+                    int userFloor = Mathf.RoundToInt(user.m_position.Y);
+                    int userElevatorLocalID = pos.IndexOf(userFloor);
                     if(userElevatorLocalID == -1)
                         continue; // No elevator on user's floor
 
                     int elevatorIndex = ids[userElevatorLocalID];
+
+                    if(elevators[elevatorIndex].IsBroken())
+                    {
+                        // try to find a working elevator on the same floor
+                        bool updated = false;
+                        for(int ei = 0; ei < pos.Count; ++ei)
+                        {
+                            if(ei == userElevatorLocalID)
+                            {
+                                continue;
+                            }
+                            if(pos[ei] != userFloor)
+                            {
+                                continue;
+                            }
+                            if(elevators[ids[ei]].IsBroken())
+                            {
+                                continue;
+                            }
+
+                            elevatorIndex = ids[ei];
+                            updated = true;
+                            break;
+                        }
+
+                        if(updated == false)
+                        {
+                            continue; // no available working elevator
+                        }
+                    }
+
                     user.elevatorState = ElevatorUser.UserElevatorState.GoingIn;
                     user.targetElevatorIndex = elevatorIndex;
                     float randomXOffset = 0.06f * (0.5f - GD.Randf());

@@ -7,6 +7,7 @@ public partial class ElevatorDisplayer : Node2D
     [Export] private Sprite2D targetModel;
     [Export] private Color restSelectionColor;
     [Export] private Color activeSelectionColor;
+    [Export] private Color brokenSelectionColor;
     [Export] private float sizeScreenRatio = 0.15f;
     [Export] private float signAnimationDuration = 1.0f;
     [Export] private AudioStream buttonSound;
@@ -20,6 +21,8 @@ public partial class ElevatorDisplayer : Node2D
     public int soundScaleIndex = 0;
 
     public float horizontalRatio = 0.5f;
+
+    public bool elevatorIsBroken = false;
 
     public override void _Ready()
     {
@@ -119,7 +122,7 @@ public partial class ElevatorDisplayer : Node2D
         {
             floorSigns[i].Clear();
             bool selected = (selectionFlags & (1 << i)) != 0;
-            floorSigns[i].PushColor(selected ? activeSelectionColor : restSelectionColor);
+            floorSigns[i].PushColor(elevatorIsBroken ? brokenSelectionColor : selected ? activeSelectionColor : restSelectionColor);
             floorSigns[i].AddText(i.ToString());
             floorSigns[i].Pop();
         }

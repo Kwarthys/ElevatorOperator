@@ -25,6 +25,8 @@ public partial class GameManager : Node
     private int selectedElevator = 0;
     private bool gameStarted = false;
 
+    private float elevatorBreakerTimer = 0.0f;
+
     public override void _Ready()
     {
         Instance = this;
@@ -103,6 +105,23 @@ public partial class GameManager : Node
 
         if(usersManager.gameLost == false)
             currentGameDuration += (float)dt;
+
+        // Debug elevator breaking blockout
+        elevatorBreakerTimer += (float)dt;
+        if(elevatorBreakerTimer > 10.0f)
+        {
+            elevatorBreakerTimer -= 10.0f;
+            if(elevators[0].IsBroken())
+            {
+                elevators[0].Repair();
+                GD.Print("REPAIR");
+            }
+            else
+            {
+                elevators[0].Break();
+                GD.Print("BREAK");
+            }
+        }
     }
 
     public void OnStartGameButtonClick()

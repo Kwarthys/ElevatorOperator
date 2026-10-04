@@ -9,6 +9,7 @@ public class Elevator
     public float m_targetPosition;
     public bool moving { get; private set; } = false;
     public float m_doorPos { get; private set; } = 0.0f;
+    private float m_broken = 0.0f;
 
     private ElevatorDisplayer m_displayer;
     private CruiseSoundManager m_soundManager;
@@ -66,7 +67,7 @@ public class Elevator
 
     private void ManageDoors(double dt)
     {
-        if(m_targetPosition == m_position)
+        if(m_targetPosition == m_position || IsBroken())
         {
             // We're where we want, open doors
             if(m_doorPos < 1.0f)
@@ -88,8 +89,21 @@ public class Elevator
         }
     }
 
-    private bool CanMove() { return m_doorPos <= 0.0f; }
+    private bool CanMove() { return m_doorPos <= 0.0f && IsBroken() == false; }
     public bool AreDoorsBlocking() { return m_doorPos < 0.7f; }
+
+    public bool IsBroken() { return m_broken > 0.0f; }
+    public void Break()
+    {
+        m_broken = 1.0f;
+        m_displayer.elevatorIsBroken = true;
+        ClearFloorRequests();
+
+        m_position = Mathf.RoundToInt(m_position);
+
+        moving = false;
+    }
+    public void Repair() { m_broken = 0.0f; m_displayer.elevatorIsBroken = false; ClearFloorRequests(); }
 
     public void RequestFloor(int floor)
     {

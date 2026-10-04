@@ -35,6 +35,7 @@ elevator = NodePath("AnimatedSprite2D")
 targetModel = NodePath("Target")
 restSelectionColor = Color(0, 0, 0, 1)
 activeSelectionColor = Color(0.827451, 0.84705883, 0, 1)
+brokenSelectionColor = Color(1, 0, 0, 1)
 sizeScreenRatio = 0.14
 signAnimationDuration = 0.75
 buttonSound = ExtResource("2_01df7")

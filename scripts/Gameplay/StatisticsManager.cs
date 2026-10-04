@@ -27,8 +27,6 @@ public static class StatisticsManager
     {
         int maxUsers = GetMaxRegisteredNumberOfUsers();
 
-        GD.Print("Generating " + width + " x " + height);
-
         Image img = Image.CreateEmpty(width, height, false, Image.Format.Rgba8);
         img.Fill(new(0.0f, 0.0f, 0.0f, 0.0f));
         for(int x = 0; x < width; ++x)

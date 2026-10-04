@@ -111,11 +111,14 @@ public class ElevatorUser
         }
         else if(elevatorState == UserElevatorState.Leaving)
         {
-            SetHorizontalTargetOuterSides();
-            scheduleState = UserScheduleState.Outside;
             elevatorState = UserElevatorState.Outside;
 
-            StatisticsManager.IncrNumberOfTravels();
+            if(Mathf.RoundToInt(m_position.Y) == m_destination)
+            {
+                StatisticsManager.IncrNumberOfTravels();
+                SetHorizontalTargetOuterSides();
+                scheduleState = UserScheduleState.Outside;
+            }
         }
 
         if(m_schedule.ShouldBack())
@@ -145,11 +148,14 @@ public class ElevatorUser
         }
         else if(elevatorState == UserElevatorState.Leaving)
         {
-            SetHorizontalTargetOuterSides();
-            scheduleState = UserScheduleState.Inside;
             elevatorState = UserElevatorState.Outside;
 
-            StatisticsManager.IncrNumberOfTravels();
+            if(Mathf.RoundToInt(m_position.Y) == m_destination)
+            {
+                StatisticsManager.IncrNumberOfTravels();
+                SetHorizontalTargetOuterSides();
+                scheduleState = UserScheduleState.Inside;
+            }
         }
 
         if(m_schedule.ShouldLeave())
@@ -200,14 +206,14 @@ public class ElevatorUser
     public void SetHorizontalTargetNearest(bool inside)
     {
         if(m_position.X > 0.5f)
-            m_horizontalTarget = inside ? 0.9f : 1.1f;
+            SetWalkTarget(inside ? 0.9f : 1.1f);
         else
-            m_horizontalTarget = inside ? 0.1f : -0.1f;
+            SetWalkTarget(inside ? 0.1f : -0.1f);
     }
 
     public void SetWalkTarget(float target) { m_horizontalTarget = target; }
-    private void SetHorizontalTargetInnerSides() { m_horizontalTarget = GD.Randf() > 0.5f ? 0.1f : 0.9f; }
-    private void SetHorizontalTargetOuterSides() { m_horizontalTarget = GD.Randf() > 0.5f ? -0.1f : 1.1f; }
+    private void SetHorizontalTargetInnerSides() { SetWalkTarget(GD.Randf() > 0.5f ? 0.1f : 0.9f); }
+    private void SetHorizontalTargetOuterSides() { SetWalkTarget(GD.Randf() > 0.5f ? -0.1f : 1.1f); }
 
     public string GetScheduleDebugText()
     {
