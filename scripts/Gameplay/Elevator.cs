@@ -91,6 +91,7 @@ public class Elevator
 
     private bool CanMove() { return m_doorPos <= 0.0f && IsBroken() == false; }
     public bool AreDoorsBlocking() { return m_doorPos < 0.7f; }
+    public bool IsAvailable() { return AreDoorsBlocking() == false && IsBroken() == false; }
 
     public bool IsBroken() { return m_broken > 0.0f; }
     public void Break()

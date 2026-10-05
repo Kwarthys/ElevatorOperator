@@ -25,15 +25,12 @@ public partial class UserManager : Node
     {
         usersDisplayer.DisplayUsers(users, dt);
 
-        if(gameLost == false)
-            ManageUserBoardOrLeaveElevators(elevators);
-
         int usersToManage = 0;
 
         users.ForEach((u) =>
         {
             if(gameLost == false)
-                u.UpdateBehavior(dt);
+                u.UpdateBehavior(dt, elevators);
             u.UpdateWalk(dt);
 
             if(u.elevatorIndex != -1)
@@ -97,127 +94,5 @@ public partial class UserManager : Node
     {
         users.Add(new(GD.RandRange(1, 5), usersWalkSpeed * Mathf.Lerp(0.7f, 1.0f, GD.Randf())));
         return users.Last();
-    }
-
-    private void ManageUserBoardOrLeaveElevators(List<Elevator> elevators)
-    {
-        List<int> pos = [];
-        List<int> ids = [];
-        for(int i = 0; i < elevators.Count; ++i)
-        {
-            if(elevators[i].moving || elevators[i].AreDoorsBlocking())
-                continue;
-
-            pos.Add(Mathf.RoundToInt(elevators[i].m_position));
-            ids.Add(i);
-        }
-
-        if(pos.Count == 0)
-            return; // all elevator moving, no user movement possible
-
-        for(int i = 0; i < users.Count; ++i)
-        {
-            ElevatorUser user = users[i];
-            if(user.elevatorState == ElevatorUser.UserElevatorState.Leaving)
-                continue; // User is not interacting with elevators
-
-            if(user.elevatorIndex != -1)
-            {
-                // User is in elevator
-                int userElevatorLocalID = ids.IndexOf(user.elevatorIndex);
-                if(userElevatorLocalID == -1)
-                    continue; // user's elevator is still moving
-
-                if(pos[userElevatorLocalID] == user.m_destination)
-                {
-                    elevators[user.elevatorIndex].ClearFloorRequest(user.m_destination);
-
-                    //GD.Print("User " + i + " left at floor " + user.m_destination);
-                    user.m_position.Y = Mathf.RoundToInt(user.m_destination);
-                    user.elevatorIndex = -1;
-                    user.elevatorState = ElevatorUser.UserElevatorState.Leaving;
-                }
-                else if(elevators[user.elevatorIndex].IsBroken())
-                {
-                    user.elevatorIndex = -1;
-                    user.targetElevatorIndex = -1;
-                    user.SetHorizontalTargetNearestInside();
-                    user.elevatorState = ElevatorUser.UserElevatorState.Leaving;
-                }
-            }
-            else if(user.m_destination != user.m_position.Y) // User wants to use an elevator but is not in one
-            {
-                if(user.targetElevatorIndex != -1)
-                {
-                    // user is already running toward an elevator, is it still available ?
-                    Elevator elevator = elevators[user.targetElevatorIndex];
-                    if(elevator.AreDoorsBlocking() || elevator.IsBroken())
-                    {
-                        // Elevator just left (or broke) right in front of this user's face --> todo get angry
-                        user.elevatorState = ElevatorUser.UserElevatorState.Waiting;
-                        user.SetHorizontalTargetNearestInside();
-                        user.targetElevatorIndex = -1;
-                    }
-                    else
-                    {
-                        int elevatorIndex = user.targetElevatorIndex;
-                        float distanceToElevator = Mathf.Abs(elevators[elevatorIndex].GetHorizontalPos() - user.m_position.X);
-                        if(distanceToElevator < 0.05f) // bit of flexibility
-                        {
-                            // Caught the elevator !
-                            //GD.Print("User " + i + " jumped in at floor " + user.m_position);
-                            elevators[elevatorIndex].RequestFloor(user.m_destination);
-                            user.elevatorIndex = elevatorIndex;
-                            user.targetElevatorIndex = -1;
-                            user.elevatorState = ElevatorUser.UserElevatorState.Elevating;
-                        }
-                    }
-                }
-                else // User is waiting
-                {
-                    int userFloor = Mathf.RoundToInt(user.m_position.Y);
-                    int userElevatorLocalID = pos.IndexOf(userFloor);
-                    if(userElevatorLocalID == -1)
-                        continue; // No elevator on user's floor
-
-                    int elevatorIndex = ids[userElevatorLocalID];
-
-                    if(elevators[elevatorIndex].IsBroken())
-                    {
-                        // try to find a working elevator on the same floor
-                        bool updated = false;
-                        for(int ei = 0; ei < pos.Count; ++ei)
-                        {
-                            if(ei == userElevatorLocalID)
-                            {
-                                continue;
-                            }
-                            if(pos[ei] != userFloor)
-                            {
-                                continue;
-                            }
-                            if(elevators[ids[ei]].IsBroken())
-                            {
-                                continue;
-                            }
-
-                            elevatorIndex = ids[ei];
-                            updated = true;
-                            break;
-                        }
-
-                        if(updated == false)
-                        {
-                            continue; // no available working elevator
-                        }
-                    }
-
-                    user.elevatorState = ElevatorUser.UserElevatorState.GoingIn;
-                    user.targetElevatorIndex = elevatorIndex;
-                    float randomXOffset = 0.06f * (0.5f - GD.Randf());
-                    user.SetWalkTarget(elevators[elevatorIndex].GetHorizontalPos() + randomXOffset);
-                }
-            }
-        }
     }
 }
