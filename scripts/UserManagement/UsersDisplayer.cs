@@ -118,6 +118,15 @@ public partial class UsersDisplayer : Node
         }
     }
 
+    public void DestroySprite(ElevatorUser user)
+    {
+        if(userToSpriteMap.ContainsKey(user) == false)
+            return;
+
+        userToSpriteMap[user].QueueFree();
+        userToSpriteMap.Remove(user);
+    }
+
     public void Reset()
     {
         foreach(KeyValuePair<ElevatorUser, UserSprite> pair in userToSpriteMap)

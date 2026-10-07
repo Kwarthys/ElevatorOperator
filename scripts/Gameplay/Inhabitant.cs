@@ -61,6 +61,9 @@ public partial class Inhabitant : ElevatorUser
         if(m_elevatorState != UserElevatorState.Leaving)
         {
             ManageElevatorRide(elevators);
+
+            if(elevatorIndex > -1 && ShouldReCall())
+                elevators[elevatorIndex].RequestFloor(m_destination);
         }
         else
         {
@@ -90,6 +93,9 @@ public partial class Inhabitant : ElevatorUser
         if(m_elevatorState != UserElevatorState.Leaving)
         {
             ManageElevatorRide(elevators);
+
+            if(elevatorIndex > -1 && ShouldReCall())
+                elevators[elevatorIndex].RequestFloor(m_destination);
         }
         else
         {

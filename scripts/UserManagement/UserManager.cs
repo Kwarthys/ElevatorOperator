@@ -13,6 +13,7 @@ public partial class UserManager : Node
 
     public static float[] impatienceThresholds = [0.5f, 0.25f, 0.1f];
     private List<Inhabitant> inhabitants = [];
+    private List<ElevatorTechos> technicians = [];
 
     private double addUserDTCounter = 0.0f;
 
@@ -25,26 +26,32 @@ public partial class UserManager : Node
     {
         List<ElevatorUser> baseUsers = [];
         inhabitants.ForEach(baseUsers.Add); // convert list of child elements to list of base elements
+        technicians.ForEach(baseUsers.Add); // Regroup both children
         usersDisplayer.DisplayUsers(baseUsers, dt);
 
         int usersToManage = 0;
+
+        for(int i = technicians.Count - 1; i >= 0; --i)
+        {
+            if(gameLost == false)
+            {
+                technicians[i].UpdateBehavior(dt, elevators);
+
+                if(technicians[i].m_movementState == ElevatorUser.UserMovementState.Outside && technicians[i].IsJobDone() && technicians[i].m_walking == false)
+                {
+                    usersDisplayer.DestroySprite(technicians[i]);
+                    technicians.RemoveAt(i);
+                    continue;
+                }
+            }
+            technicians[i].UpdateWalk(dt);
+        }
 
         inhabitants.ForEach((u) =>
         {
             if(gameLost == false)
                 u.UpdateBehavior(dt, elevators);
             u.UpdateWalk(dt);
-
-            if(u.elevatorIndex != -1)
-            {
-                u.m_position.Y = elevators[u.elevatorIndex].m_position;
-
-                // Manage floor button impatience press
-                if(u.ShouldReCall())
-                {
-                    elevators[u.elevatorIndex].RequestFloor(u.m_destination);
-                }
-            }
 
             if(u.NeedsALift())
                 usersToManage++;
@@ -72,6 +79,11 @@ public partial class UserManager : Node
             ElevatorUser user = GenerateUser();
             addUserDTCounter -= addUserPeriod;
         }
+    }
+
+    public void SpawnTechnician(Elevator _target)
+    {
+        technicians.Add(new(usersWalkSpeed, _target));
     }
 
     public void OnScreenResize()

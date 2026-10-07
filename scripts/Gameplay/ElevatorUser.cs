@@ -28,7 +28,7 @@ public abstract class ElevatorUser
     protected abstract void ManageEntering(List<Elevator> elevators);
 
     public virtual string GetDebugText() { return ""; }
-    public virtual float GetPatience() { return 0.3f; }
+    public virtual float GetPatience() { return 0.7f; }
 
     public void UpdateBehavior(double dt, List<Elevator> elevators)
     {
@@ -125,6 +125,8 @@ public abstract class ElevatorUser
             }
             case UserElevatorState.Elevating:
             {
+                m_position.Y = elevators[elevatorIndex].m_position;
+
                 if(elevators[elevatorIndex].AreDoorsBlocking())
                     break;
 

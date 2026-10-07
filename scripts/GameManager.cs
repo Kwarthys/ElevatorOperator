@@ -107,19 +107,15 @@ public partial class GameManager : Node
             currentGameDuration += (float)dt;
 
         // Debug elevator breaking blockout
-        elevatorBreakerTimer += (float)dt;
-        if(elevatorBreakerTimer > 10.0f)
+        if(elevators[0].IsBroken() == false)
         {
-            elevatorBreakerTimer -= 10.0f;
-            if(elevators[0].IsBroken())
+            elevatorBreakerTimer += (float)dt;
+            if(elevatorBreakerTimer > 10.0f)
             {
-                elevators[0].Repair();
-                GD.Print("REPAIR");
-            }
-            else
-            {
+                elevatorBreakerTimer -= 10.0f;
                 elevators[0].Break();
                 GD.Print("BREAK");
+                usersManager.SpawnTechnician(elevators[0]);
             }
         }
     }
