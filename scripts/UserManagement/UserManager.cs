@@ -12,7 +12,7 @@ public partial class UserManager : Node
     [Export] private EndGameAnimationDriver endGameAnimation;
 
     public static float[] impatienceThresholds = [0.5f, 0.25f, 0.1f];
-    private List<ElevatorUser> users = [];
+    private List<Inhabitant> inhabitants = [];
 
     private double addUserDTCounter = 0.0f;
 
@@ -23,11 +23,13 @@ public partial class UserManager : Node
 
     public void UpdateUsers(double dt, List<Elevator> elevators)
     {
-        usersDisplayer.DisplayUsers(users, dt);
+        List<ElevatorUser> baseUsers = [];
+        inhabitants.ForEach(baseUsers.Add); // convert list of child elements to list of base elements
+        usersDisplayer.DisplayUsers(baseUsers, dt);
 
         int usersToManage = 0;
 
-        users.ForEach((u) =>
+        inhabitants.ForEach((u) =>
         {
             if(gameLost == false)
                 u.UpdateBehavior(dt, elevators);
@@ -51,7 +53,7 @@ public partial class UserManager : Node
             {
                 gameLost = true;
                 StatisticsManager.userLostSchedule = u.GetSchedule();
-                StatisticsManager.userLostID = users.IndexOf(u) + 1;
+                StatisticsManager.userLostID = inhabitants.IndexOf(u) + 1;
                 GameManager.OnGameLost();
                 endGameAnimation.Start();
             }
@@ -80,7 +82,7 @@ public partial class UserManager : Node
     public void InitUsers()
     {
         usersDisplayer.Reset();
-        users.Clear();
+        inhabitants.Clear();
         gameLost = false;
         for(int i = 0; i < startingUserCount; ++i)
         {
@@ -88,11 +90,11 @@ public partial class UserManager : Node
         }
     }
 
-    public int GetUserCount() { return users.Count; }
+    public int GetUserCount() { return inhabitants.Count; }
 
     private ElevatorUser GenerateUser()
     {
-        users.Add(new(GD.RandRange(1, 5), usersWalkSpeed * Mathf.Lerp(0.7f, 1.0f, GD.Randf())));
-        return users.Last();
+        inhabitants.Add(new(GD.RandRange(1, 5), usersWalkSpeed * Mathf.Lerp(0.7f, 1.0f, GD.Randf())));
+        return inhabitants.Last();
     }
 }

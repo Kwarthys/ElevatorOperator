@@ -60,7 +60,7 @@ public partial class UsersDisplayer : Node
 
             if(displayDebugTexts)
             {
-                debugTexts[i].Text = users[i].GetScheduleDebugText();
+                debugTexts[i].Text = users[i].GetDebugText();
                 debugTexts[i].Position = sprite.Position;
             }
 
