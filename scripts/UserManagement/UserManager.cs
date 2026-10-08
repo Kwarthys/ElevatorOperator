@@ -9,6 +9,7 @@ public partial class UserManager : Node
     [Export] public float usersWalkSpeed = 0.5f;
     [Export] private int startingUserCount = 5;
     [Export] private float addUserPeriod = 10.0f;
+    [Export] private double technicianRepairTime = 3.0;
     [Export] private EndGameAnimationDriver endGameAnimation;
 
     public static float[] impatienceThresholds = [0.5f, 0.25f, 0.1f];
@@ -83,7 +84,7 @@ public partial class UserManager : Node
 
     public void SpawnTechnician(Elevator _target)
     {
-        technicians.Add(new(usersWalkSpeed, _target));
+        technicians.Add(new(technicianRepairTime, usersWalkSpeed, _target));
     }
 
     public void OnScreenResize()

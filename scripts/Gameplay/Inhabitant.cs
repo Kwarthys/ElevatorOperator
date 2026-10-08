@@ -32,7 +32,7 @@ public partial class Inhabitant : ElevatorUser
         m_position.X = m_horizontalTarget;
     }
 
-    protected override void ManageOutside()
+    protected override void ManageOutside(double dt)
     {
         if(m_schedule.ShouldBack() == false) // equivalent but clearer than ShouldLeave
             return;
@@ -44,7 +44,7 @@ public partial class Inhabitant : ElevatorUser
         m_elevatorState = UserElevatorState.Init;
     }
 
-    protected override void ManageInside()
+    protected override void ManageInside(double dt)
     {
         if(m_schedule.ShouldLeave() == false) // equivalent but clearer than ShouldBack
             return;
@@ -56,7 +56,7 @@ public partial class Inhabitant : ElevatorUser
         m_elevatorState = UserElevatorState.Init;
     }
 
-    protected override void ManageLeaving(List<Elevator> elevators)
+    protected override void ManageLeaving(double dt, List<Elevator> elevators)
     {
         if(m_elevatorState != UserElevatorState.Leaving)
         {
@@ -88,7 +88,7 @@ public partial class Inhabitant : ElevatorUser
         }
     }
 
-    protected override void ManageEntering(List<Elevator> elevators)
+    protected override void ManageEntering(double dt, List<Elevator> elevators)
     {
         if(m_elevatorState != UserElevatorState.Leaving)
         {

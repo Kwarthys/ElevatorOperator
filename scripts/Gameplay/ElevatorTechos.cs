@@ -6,8 +6,10 @@ public partial class ElevatorTechos : ElevatorUser
 {
     private Elevator m_targetElevator;
     private bool m_jobsDone = false;
-    public ElevatorTechos(float walkSpeed, Elevator targetElevator) : base(walkSpeed)
+    private double m_repairTime = 1.0f;
+    public ElevatorTechos(double repairTime, float walkSpeed, Elevator targetElevator) : base(walkSpeed)
     {
+        m_repairTime = repairTime;
         m_targetElevator = targetElevator;
         m_movementState = UserMovementState.Outside;
 
@@ -18,7 +20,7 @@ public partial class ElevatorTechos : ElevatorUser
 
     public bool IsJobDone() { return m_jobsDone; }
 
-    protected override void ManageOutside() // setup elevator route to reach damaged elevator
+    protected override void ManageOutside(double dt) // setup elevator route to reach damaged elevator
     {
         if(m_jobsDone)
             return;
@@ -34,11 +36,11 @@ public partial class ElevatorTechos : ElevatorUser
 
     }
 
-    protected override void ManageInside() // here we repair the elevator, then leave
+    protected override void ManageInside(double dt) // here we repair the elevator, then leave
     {
         if(m_targetElevator.IsBroken())
         {
-            m_targetElevator.Repair();
+            m_targetElevator.Repair(dt / m_repairTime);
             return;
         }
 
@@ -57,7 +59,7 @@ public partial class ElevatorTechos : ElevatorUser
         }
     }
 
-    protected override void ManageLeaving(List<Elevator> elevators)
+    protected override void ManageLeaving(double dt, List<Elevator> elevators)
     {
         if(m_elevatorState != UserElevatorState.Leaving)
         {
@@ -69,7 +71,7 @@ public partial class ElevatorTechos : ElevatorUser
             m_movementState = UserMovementState.Outside;
         }
     }
-    protected override void ManageEntering(List<Elevator> elevators)
+    protected override void ManageEntering(double dt, List<Elevator> elevators)
     {
         if(m_elevatorState != UserElevatorState.Leaving)
         {

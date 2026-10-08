@@ -22,10 +22,10 @@ public abstract class ElevatorUser
         m_walkSpeed = walkSpeed;
     }
 
-    protected abstract void ManageOutside();
-    protected abstract void ManageInside();
-    protected abstract void ManageLeaving(List<Elevator> elevators);
-    protected abstract void ManageEntering(List<Elevator> elevators);
+    protected abstract void ManageOutside(double dt);
+    protected abstract void ManageInside(double dt);
+    protected abstract void ManageLeaving(double dt, List<Elevator> elevators);
+    protected abstract void ManageEntering(double dt, List<Elevator> elevators);
 
     public virtual string GetDebugText() { return ""; }
     public virtual float GetPatience() { return 0.7f; }
@@ -34,10 +34,10 @@ public abstract class ElevatorUser
     {
         switch(m_movementState)
         {
-            case UserMovementState.Outside: ManageOutside(); break;
-            case UserMovementState.Inside: ManageInside(); break;
-            case UserMovementState.Leaving: ManageLeaving(elevators); break;
-            case UserMovementState.Entering: ManageEntering(elevators); break;
+            case UserMovementState.Outside: ManageOutside(dt); break;
+            case UserMovementState.Inside: ManageInside(dt); break;
+            case UserMovementState.Leaving: ManageLeaving(dt, elevators); break;
+            case UserMovementState.Entering: ManageEntering(dt, elevators); break;
         }
     }
 

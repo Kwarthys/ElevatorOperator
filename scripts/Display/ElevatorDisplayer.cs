@@ -22,12 +22,10 @@ public partial class ElevatorDisplayer : Node2D
 
     public float horizontalRatio = 0.5f;
 
-    public bool elevatorIsBroken = false;
-
     public override void _Ready()
     {
         Position = Vector2.Zero; // make sure nothing is offset
-        SetFloorSelection(0);
+        UpdateFloorSelectionDisplay(0);
         elevatorTexture = elevator.SpriteFrames.GetFrameTexture("doors", 0);
 
         soundPlayer = ScaleGenerator.GeneratePlayerForPitchedSound(buttonSound, soundScaleIndex, "FX");
@@ -116,13 +114,16 @@ public partial class ElevatorDisplayer : Node2D
         soundPlayer?.Play();
     }
 
-    public void SetFloorSelection(int selectionFlags)
+    public void UpdateFloorSelectionDisplay(int selectionFlags, double brokenAmount = 0.0)
     {
+        int brokenSigns = brokenAmount < Mathf.Epsilon ? 0 : Mathf.CeilToInt(brokenAmount * floorSigns.Count);
+
         for(int i = 0; i < floorSigns.Count; ++i)
         {
-            floorSigns[i].Clear();
             bool selected = (selectionFlags & (1 << i)) != 0;
-            floorSigns[i].PushColor(elevatorIsBroken ? brokenSelectionColor : selected ? activeSelectionColor : restSelectionColor);
+            bool broken = (floorSigns.Count - brokenSigns) < i + 1;
+            floorSigns[i].Clear();
+            floorSigns[i].PushColor(broken ? brokenSelectionColor : selected ? activeSelectionColor : restSelectionColor);
             floorSigns[i].AddText(i.ToString());
             floorSigns[i].Pop();
         }

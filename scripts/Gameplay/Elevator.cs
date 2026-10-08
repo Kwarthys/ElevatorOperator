@@ -7,16 +7,16 @@ public class Elevator
     public float m_speed { get; private set; }
     public float m_doorSpeed { get; private set; }
     public float m_targetPosition;
-    public bool moving { get; private set; } = false;
+    public bool m_moving { get; private set; } = false;
     public float m_doorPos { get; private set; } = 0.0f;
-    private float m_broken = 0.0f;
+    private double m_broken = 0.0;
 
     private ElevatorDisplayer m_displayer;
     private CruiseSoundManager m_soundManager;
 
     public bool forceDisplayUpdate = false;
 
-    private int requestedFloorFlags = 0;
+    private int m_requestedFloorFlags = 0;
 
     public float GetHorizontalPos() { return m_displayer.horizontalRatio; }
 
@@ -49,17 +49,17 @@ public class Elevator
                 forceDisplayUpdate = false;
             }
 
-            m_soundManager.UpdateState(moving);
+            m_soundManager.UpdateState(m_moving);
             return;
         }
 
         if(CanMove())
         {
-            moving = !Utils.SpeedMove(dt, m_speed, m_position, m_targetPosition, out float newPos);
+            m_moving = !Utils.SpeedMove(dt, m_speed, m_position, m_targetPosition, out float newPos);
             m_position = newPos;
         }
 
-        m_soundManager.UpdateState(moving);
+        m_soundManager.UpdateState(m_moving);
 
         m_displayer.UpdateDisplayPos(m_position, m_targetPosition);
         forceDisplayUpdate = false;
@@ -96,32 +96,45 @@ public class Elevator
     public bool IsBroken() { return m_broken > 0.0f; }
     public void Break()
     {
-        m_broken = 1.0f;
-        m_displayer.elevatorIsBroken = true;
+        m_broken = 1.0;
         ClearFloorRequests();
 
         m_position = Mathf.RoundToInt(m_position);
 
-        moving = false;
+        m_moving = false;
     }
-    public void Repair() { m_broken = 0.0f; m_displayer.elevatorIsBroken = false; ClearFloorRequests(); }
+    public void Repair(double repairAmount)
+    {
+        if(IsBroken() == false)
+            return;
+
+        m_broken -= repairAmount;
+
+        if(IsBroken() == false)
+        {
+            m_broken = 0.0;
+            ClearFloorRequests();
+        }
+        else
+            m_displayer.UpdateFloorSelectionDisplay(0, m_broken);
+    }
 
     public void RequestFloor(int floor)
     {
-        requestedFloorFlags |= 1 << floor;
-        m_displayer.SetFloorSelection(requestedFloorFlags);
+        m_requestedFloorFlags |= 1 << floor;
+        m_displayer.UpdateFloorSelectionDisplay(m_requestedFloorFlags, m_broken);
 
         m_displayer.AnimateFloorSelection(floor);
     }
     public void ClearFloorRequest(int floor)
     {
-        requestedFloorFlags &= ~(1 << floor);
-        m_displayer.SetFloorSelection(requestedFloorFlags);
+        m_requestedFloorFlags &= ~(1 << floor);
+        m_displayer.UpdateFloorSelectionDisplay(m_requestedFloorFlags, m_broken);
     }
 
     public void ClearFloorRequests()
     {
-        requestedFloorFlags = 0;
-        m_displayer.SetFloorSelection(0);
+        m_requestedFloorFlags = 0;
+        m_displayer.UpdateFloorSelectionDisplay(0, m_broken);
     }
 }
