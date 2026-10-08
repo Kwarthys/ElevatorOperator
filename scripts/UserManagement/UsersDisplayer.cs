@@ -104,7 +104,7 @@ public partial class UsersDisplayer : Node
 
     private UserSprite CreateNewDisplay(ElevatorUser user)
     {
-        UserSprite sprite = new(bodyGenerator.Generate(textureSize, outlineSize, circleRadii), swayAmplitude);
+        UserSprite sprite = new(bodyGenerator.Generate(textureSize, outlineSize, circleRadii, user.m_userType == ElevatorUser.UserType.Technician), swayAmplitude);
         userToSpriteMap.Add(user, sprite);
         sceneryHolder.AddChild(sprite);
         return sprite;

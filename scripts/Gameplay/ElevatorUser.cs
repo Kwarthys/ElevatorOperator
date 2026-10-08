@@ -6,8 +6,10 @@ public abstract class ElevatorUser
 {
     public enum UserElevatorState { Init, Waiting, GoingIn, Elevating, Leaving }
     public enum UserMovementState { Inside, Outside, Leaving, Entering }
+    public enum UserType { Inhabitant, Technician }
     public UserElevatorState m_elevatorState = UserElevatorState.Init;
     public UserMovementState m_movementState;
+    public UserType m_userType { get; private set; }
     public Vector2 m_position;
     public int m_destination { get; protected set; }
     public int elevatorIndex = -1;
@@ -17,9 +19,10 @@ public abstract class ElevatorUser
     public bool m_walking { get; private set; } = false;
     private float m_walkSpeed;
 
-    public ElevatorUser(float walkSpeed)
+    public ElevatorUser(float walkSpeed, UserType type)
     {
         m_walkSpeed = walkSpeed;
+        m_userType = type;
     }
 
     protected abstract void ManageOutside(double dt);

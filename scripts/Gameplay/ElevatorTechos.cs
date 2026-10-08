@@ -7,7 +7,7 @@ public partial class ElevatorTechos : ElevatorUser
     private Elevator m_targetElevator;
     private bool m_jobsDone = false;
     private double m_repairTime = 1.0f;
-    public ElevatorTechos(double repairTime, float walkSpeed, Elevator targetElevator) : base(walkSpeed)
+    public ElevatorTechos(double repairTime, float walkSpeed, Elevator targetElevator) : base(walkSpeed, UserType.Technician)
     {
         m_repairTime = repairTime;
         m_targetElevator = targetElevator;

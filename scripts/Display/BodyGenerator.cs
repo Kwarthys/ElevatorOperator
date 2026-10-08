@@ -2,7 +2,7 @@ using Godot;
 
 public class BodyGenerator
 {
-	public Texture2D Generate(Vector2I size, int outlineSize, Vector2I circleRadii)
+	public Texture2D Generate(Vector2I size, int outlineSize, Vector2I circleRadii, bool technicianUniform)
 	{
 		Image img = Image.CreateEmpty(size.X, size.Y, false, Image.Format.Rgba8);
 
@@ -51,13 +51,30 @@ public class BodyGenerator
 					}
 				}
 
-				Vector2 dist2ToCenterA = vPos - center;
-				if(dist2ToCenterA.LengthSquared() < radius * radius)
+				int dist2ToCenter = (vPos - center).LengthSquared();
+				if(technicianUniform && y < circleCenterA.Y)
 				{
-					if(dist2ToCenterA.LengthSquared() < (radius - outlineSize) * (radius - outlineSize))
+					if(dist2ToCenter < radius * radius * 1.2)
+						img.SetPixelv(vPos, new(1, 1, 0, 1));
+					else
+						img.SetPixelv(vPos, new(0, 0, 0, 0));
+				}
+				else if(dist2ToCenter < radius * radius)
+				{
+					float uniformYStart = size.Y * 0.45f;
+					float uniformYEnd = size.Y * 0.85f;
+
+					if(technicianUniform && y > uniformYStart && y < uniformYEnd)
+						img.SetPixelv(vPos, new(0, 0, 1, 1));
+					else if(dist2ToCenter < (radius - outlineSize) * (radius - outlineSize))
 						img.SetPixelv(vPos, c);
 					else
-						img.SetPixelv(vPos, new(1, 1, 1, 1));
+					{
+						if(technicianUniform && y < uniformYEnd)
+							img.SetPixelv(vPos, new(0, 0, 1, 1));
+						else
+							img.SetPixelv(vPos, new(1, 1, 1, 1));
+					}
 				}
 				else
 				{

@@ -11,7 +11,7 @@ public partial class Inhabitant : ElevatorUser
     private UserSchedule m_schedule;
     public UserSchedule GetSchedule() { return m_schedule; }
 
-    public Inhabitant(int buildingDestination, float walkSpeed) : base(walkSpeed)
+    public Inhabitant(int buildingDestination, float walkSpeed) : base(walkSpeed, UserType.Inhabitant)
     {
         m_insideDestination = buildingDestination;
 
