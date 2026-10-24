@@ -46,6 +46,7 @@ backgroundDisplayer = NodePath("../BackgroundDisplayer")
 gameClockManager = NodePath("../GameClockManager")
 startGameButton = NodePath("../Scenery/StartGameButton")
 endGameManager = NodePath("../EndGameScreen")
+maxBreakSpanTime = 40.0
 
 [node name="BackgroundDisplayer" type="Node" parent="." node_paths=PackedStringArray("backgroundHolder", "backgroundTextsHolder", "elevatorButtonCallHolder", "callManager")]
 script = ExtResource("5_gubc5")

@@ -25,7 +25,10 @@ public partial class GameManager : Node
     private int selectedElevator = 0;
     private bool gameStarted = false;
 
-    private float elevatorBreakerTimer = 0.0f;
+    private float lastElevatorBreakTime = -1.0f;
+    private float breakerDtAccumulator = -1.0f;
+    [Export] float minBreakSpanTime = 20.0f;
+    [Export] float maxBreakSpanTime = 60.0f;
 
     public override void _Ready()
     {
@@ -55,6 +58,8 @@ public partial class GameManager : Node
         gameClockManager.Reset();
         currentGameDuration = 0.0f;
         gameStarted = true;
+
+        breakerDtAccumulator = maxBreakSpanTime;
 
         usersManager.InitUsers();
         endGameManager.Visible = false;
@@ -104,19 +109,9 @@ public partial class GameManager : Node
         gameClockManager.AdvanceClock(dt);
 
         if(usersManager.gameLost == false)
-            currentGameDuration += (float)dt;
-
-        // Debug elevator breaking blockout
-        if(elevators[0].IsBroken() == false)
         {
-            elevatorBreakerTimer += (float)dt;
-            if(elevatorBreakerTimer > 10.0f)
-            {
-                elevatorBreakerTimer -= 10.0f;
-                elevators[0].Break();
-                GD.Print("BREAK");
-                usersManager.SpawnTechnician(elevators[0]);
-            }
+            currentGameDuration += (float)dt;
+            ManageElevatorBreaking(dt);
         }
     }
 
@@ -168,5 +163,37 @@ public partial class GameManager : Node
 
         endGameManager.Size = new Vector2(0.5f, 0.75f) * DisplayUtils.screenSize;
         endGameManager.Position = new Vector2(0.25f, 0.125f) * DisplayUtils.screenSize;
+    }
+
+    private void ManageElevatorBreaking(double dt)
+    {
+        bool allBroken = true;
+        foreach(Elevator e in elevators)
+        {
+            if(e.IsBroken())
+                continue;
+            allBroken = false;
+            break;
+        }
+
+        if(allBroken)
+            return;
+
+        breakerDtAccumulator -= (float)dt;
+        if(breakerDtAccumulator < 0.0f)
+        {
+            breakerDtAccumulator = Mathf.Lerp(minBreakSpanTime, maxBreakSpanTime, GD.Randf());
+
+            int elevatorIndex = -1;
+            while(elevatorIndex == -1)
+            {
+                int candidateIndex = Mathf.RoundToInt(GD.Randi() % elevators.Count);
+                if(elevators[candidateIndex].IsBroken() == false)
+                    elevatorIndex = candidateIndex;
+            }
+
+            elevators[elevatorIndex].Break();
+            usersManager.SpawnTechnician(elevators[elevatorIndex]);
+        }
     }
 }
