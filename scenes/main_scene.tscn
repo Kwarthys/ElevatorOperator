@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://cqv52q0wus5rh"]
+[gd_scene load_steps=24 format=3 uid="uid://cqv52q0wus5rh"]
 
 [ext_resource type="Script" uid="uid://c64u4diqj8njf" path="res://scripts/InputManager.cs" id="1_w2twt"]
 [ext_resource type="Script" uid="uid://dp4uxx5m0q0d1" path="res://scripts/GameManager.cs" id="2_pw63i"]
@@ -20,6 +20,7 @@
 [ext_resource type="AudioStream" uid="uid://cqc5qaniajerw" path="res://Music/ElevatorOperator_Tense.wav" id="14_7nt27"]
 [ext_resource type="AudioStream" uid="uid://bmac1ic7b81tl" path="res://Music/ElevatorOperator_Chaos.wav" id="15_k6f3i"]
 [ext_resource type="Theme" uid="uid://cwe204j4axq50" path="res://scripts/UI/button_theme.tres" id="20_k6f3i"]
+[ext_resource type="Texture2D" uid="uid://c6ytn45vkief7" path="res://sprites/BrickTile.png" id="21_adb74"]
 [ext_resource type="PackedScene" uid="uid://cnlmaafxbyqc6" path="res://scenes/end_game_screen.tscn" id="21_xdqt8"]
 
 [sub_resource type="Gradient" id="Gradient_gubc5"]
@@ -35,7 +36,7 @@ metadata/_snap_enabled = true
 script = ExtResource("1_w2twt")
 gameManager = NodePath("../GameManager")
 
-[node name="GameManager" type="Node" parent="." node_paths=PackedStringArray("sceneryNode", "usersManager", "backgroundDisplayer", "gameClockManager", "startGameButton", "endGameManager")]
+[node name="GameManager" type="Node" parent="." node_paths=PackedStringArray("sceneryNode", "usersManager", "backgroundDisplayer", "gameClockManager", "startGameButton", "endGameManager", "brickBackground")]
 script = ExtResource("2_pw63i")
 elevatorSpeed = 4.0
 elevatorDoorSpeed = 1.2
@@ -46,11 +47,12 @@ backgroundDisplayer = NodePath("../BackgroundDisplayer")
 gameClockManager = NodePath("../GameClockManager")
 startGameButton = NodePath("../Scenery/StartGameButton")
 endGameManager = NodePath("../EndGameScreen")
+brickBackground = NodePath("../Scenery/BackgroundSpritesHolder/BricksTexture")
 maxBreakSpanTime = 40.0
 
 [node name="BackgroundDisplayer" type="Node" parent="." node_paths=PackedStringArray("backgroundHolder", "backgroundTextsHolder", "elevatorButtonCallHolder", "callManager")]
 script = ExtResource("5_gubc5")
-backgroundColor = Color(0.07058824, 0.07058824, 0.078431375, 1)
+backgroundColor = Color(0.07058824, 0.07058824, 0.078431375, 0.9411765)
 selectionColor = Color(0.45882353, 1, 1, 0.23529412)
 colors = SubResource("Gradient_gubc5")
 backgroundHolder = NodePath("../Scenery/BackgroundSpritesHolder")
@@ -125,6 +127,14 @@ bus = &"Music"
 [node name="Scenery" type="Node2D" parent="."]
 
 [node name="BackgroundSpritesHolder" type="Node2D" parent="Scenery"]
+
+[node name="BricksTexture" type="TextureRect" parent="Scenery/BackgroundSpritesHolder"]
+offset_right = 80.0
+offset_bottom = 73.0
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("21_adb74")
+expand_mode = 1
+stretch_mode = 1
 
 [node name="FloorTextsHolder" type="Node2D" parent="Scenery"]
 

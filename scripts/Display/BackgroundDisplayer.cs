@@ -23,7 +23,7 @@ public partial class BackgroundDisplayer : Node
         for(int i = 0; i < 6; ++i)
         {
             float xPos = (i + 1) / 7.0f;
-            items.Add(CreateItem(SampleColor(i), new(0.5f, xPos), new(1.0f, 0.01f)));
+            items.Add(CreateItemLowShadow(SampleColor(i), new(0.5f, xPos), new(1.0f, 0.01f)));
             items.Add(CreateFloorDisplay(5 - i, backgroundColor, new(0.05f, xPos), new(-1.0f, -1.0f)));
 
             SceneryNode2D item = CreateTriangle(new(0.175f, xPos), new(0.0005f, 0.001f), i == 5);
@@ -34,7 +34,7 @@ public partial class BackgroundDisplayer : Node
             callManager.RegisterCallButton((Sprite2D)item.node);
         }
 
-        selectionDisplayer = CreateItem(selectionColor, new(1.0f / 4.0f, 0.5f), new(0.01f, 1.0f), true);
+        selectionDisplayer = CreateItemCenterGlow(selectionColor, new(1.0f / 4.0f, 0.5f), new(0.01f, 1.0f));
         items.Add(selectionDisplayer);
 
         UpdateScenery();
@@ -51,23 +51,41 @@ public partial class BackgroundDisplayer : Node
         selectionDisplayer.Update();
     }
 
-    private SceneryNode2D CreateItem(Color c, Vector2 center, Vector2 size, bool centerGlow = false) // Last item added is on top
+    private SceneryNode2D CreateSceneryNode(Vector2 center, Vector2 size, Node2D sprite)
     {
-        Sprite2D sprite = new();
-        if(centerGlow)
-            sprite.Texture = createTextureCenterGlow(c);
-        else
-            sprite.Texture = createTextureLowShadow(c);
         backgroundHolder.AddChild(sprite);
-
         SceneryNode2D item = new()
         {
             center = center,
             size = size,
             node = sprite
         };
-
         return item;
+    }
+
+    private SceneryNode2D CreateItem(Color c, Vector2 center, Vector2 size)
+    {
+        Image img = Image.CreateEmpty(1, 1, false, Image.Format.Rgba8);
+        img.Fill(c);
+
+        Sprite2D sprite = new();
+        sprite.Texture = ImageTexture.CreateFromImage(img);
+
+        return CreateSceneryNode(center, size, sprite);
+    }
+
+    private SceneryNode2D CreateItemLowShadow(Color c, Vector2 center, Vector2 size)
+    {
+        Sprite2D sprite = new();
+        sprite.Texture = createTextureLowShadow(c);
+        return CreateSceneryNode(center, size, sprite);
+    }
+
+    private SceneryNode2D CreateItemCenterGlow(Color c, Vector2 center, Vector2 size)
+    {
+        Sprite2D sprite = new();
+        sprite.Texture = createTextureCenterGlow(c);
+        return CreateSceneryNode(center, size, sprite);
     }
 
     private Texture2D createTextureLowShadow(Color c)

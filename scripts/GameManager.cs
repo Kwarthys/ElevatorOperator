@@ -17,6 +17,7 @@ public partial class GameManager : Node
     [Export] private Button startGameButton;
 
     [Export] private EndGameScreenManager endGameManager;
+    [Export] private Control brickBackground;
 
     public float currentGameDuration { get; private set; } = 0.0f;
 
@@ -163,6 +164,8 @@ public partial class GameManager : Node
 
         endGameManager.Size = new Vector2(0.5f, 0.75f) * DisplayUtils.screenSize;
         endGameManager.Position = new Vector2(0.25f, 0.125f) * DisplayUtils.screenSize;
+
+        brickBackground.Size = DisplayUtils.screenSize / brickBackground.Scale;
     }
 
     private void ManageElevatorBreaking(double dt)
