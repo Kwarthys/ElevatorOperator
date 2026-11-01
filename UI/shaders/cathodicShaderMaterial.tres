@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://byy12wpolikun"]
+
+[ext_resource type="Shader" uid="uid://be06q3b5mki8s" path="res://UI/shaders/cathodicShader.gdshader" id="1_d8v80"]
+
+[resource]
+shader = ExtResource("1_d8v80")
+shader_parameter/lowestCrt = 0.9
+shader_parameter/crtFrequency = 250.0
+shader_parameter/curvature = 5.0

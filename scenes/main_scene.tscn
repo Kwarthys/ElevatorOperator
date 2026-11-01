@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://cqv52q0wus5rh"]
+[gd_scene load_steps=25 format=3 uid="uid://cqv52q0wus5rh"]
 
 [ext_resource type="Script" uid="uid://c64u4diqj8njf" path="res://scripts/InputManager.cs" id="1_w2twt"]
 [ext_resource type="Script" uid="uid://dp4uxx5m0q0d1" path="res://scripts/GameManager.cs" id="2_pw63i"]
@@ -22,6 +22,7 @@
 [ext_resource type="Theme" uid="uid://cwe204j4axq50" path="res://scripts/UI/button_theme.tres" id="20_k6f3i"]
 [ext_resource type="Texture2D" uid="uid://c6ytn45vkief7" path="res://sprites/BrickTile.png" id="21_adb74"]
 [ext_resource type="PackedScene" uid="uid://cnlmaafxbyqc6" path="res://scenes/end_game_screen.tscn" id="21_xdqt8"]
+[ext_resource type="Material" uid="uid://byy12wpolikun" path="res://UI/shaders/cathodicShaderMaterial.tres" id="23_58gk3"]
 
 [sub_resource type="Gradient" id="Gradient_gubc5"]
 interpolation_mode = 1
@@ -208,5 +209,18 @@ offset_left = -793.0
 offset_top = 418.0
 offset_right = -793.0
 offset_bottom = 418.0
+
+[node name="ShaderEffects" type="Node2D" parent="."]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="ShaderEffects"]
+
+[node name="ColorRect" type="ColorRect" parent="ShaderEffects/CanvasLayer"]
+material = ExtResource("23_58gk3")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [connection signal="pressed" from="Scenery/StartGameButton" to="GameManager" method="OnStartGameButtonClick"]
