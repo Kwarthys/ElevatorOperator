@@ -3,7 +3,10 @@ using System.Collections.Generic;
 
 public partial class ElevatorDisplayer : Node2D
 {
-    [Export] private AnimatedSprite2D elevator;
+    [Export] private ColorRect elevatorBackground;
+    private Color defaultBackgroundColor;
+    [Export] private Color brokenBackgroundColor = new(1.0f, 0.0f, 0.0f);
+    [Export] private AnimatedSprite2D elevatorAnimation;
     [Export] private Sprite2D targetModel;
     [Export] private Color restSelectionColor;
     [Export] private Color activeSelectionColor;
@@ -25,8 +28,11 @@ public partial class ElevatorDisplayer : Node2D
     public override void _Ready()
     {
         Position = Vector2.Zero; // make sure nothing is offset
+        elevatorTexture = elevatorAnimation.SpriteFrames.GetFrameTexture("doors", 0);
+
+        elevatorBackground.Size = elevatorTexture.GetSize();
+        defaultBackgroundColor = elevatorBackground.Color;
         UpdateFloorSelectionDisplay(0);
-        elevatorTexture = elevator.SpriteFrames.GetFrameTexture("doors", 0);
 
         soundPlayer = ScaleGenerator.GeneratePlayerForPitchedSound(buttonSound, soundScaleIndex, "FX");
         AddChild(soundPlayer);
@@ -48,8 +54,10 @@ public partial class ElevatorDisplayer : Node2D
 
     public void UpdateDisplayPos(float pos, float targetPos)
     {
-        elevator.Position = DisplayUtils.ComputeScreenPosFromPos(new(horizontalRatio, pos));
+        elevatorAnimation.Position = DisplayUtils.ComputeScreenPosFromPos(new(horizontalRatio, pos));
         targetModel.Position = DisplayUtils.ComputeScreenPosFromPos(new(horizontalRatio, targetPos));
+
+        elevatorBackground.Position = elevatorAnimation.Position - elevatorBackground.Size * 0.5f * elevatorBackground.Scale;
     }
 
     public void UpdateScale()
@@ -57,13 +65,16 @@ public partial class ElevatorDisplayer : Node2D
         float targetSize = sizeScreenRatio * DisplayUtils.screenSize.Y;
         float scaler = targetSize / elevatorTexture.GetHeight();
 
-        elevator.Scale = new(scaler, scaler);
-        targetModel.Scale = new(scaler * 0.9f, scaler * 0.9f);
+        Vector2 reducedScale = new(scaler * 0.9f, scaler * 0.9f);
+
+        elevatorAnimation.Scale = new(scaler, scaler);
+        elevatorBackground.Scale = reducedScale;
+        targetModel.Scale = reducedScale;
     }
 
     public void UpdateSigns(double dt)
     {
-        float availableXSpace = elevatorTexture.GetWidth() * elevator.Scale.X * 1.3f;
+        float availableXSpace = elevatorTexture.GetWidth() * elevatorAnimation.Scale.X * 1.3f;
         float padding = 0.05f * availableXSpace;
         float signBaseSize = availableXSpace / 5.0f - padding;
         float startXPoint = availableXSpace * 0.5f;
@@ -71,8 +82,8 @@ public partial class ElevatorDisplayer : Node2D
         for(int i = 0; i < floorSigns.Count; ++i)
         {
             RichTextLabel sign = floorSigns[i];
-            sign.Position = elevator.Position - sign.Size * 0.5f;
-            sign.Position -= new Vector2(startXPoint - i * (padding + signBaseSize), elevatorTexture.GetHeight() * elevator.Scale.Y * 0.7f);
+            sign.Position = elevatorAnimation.Position - sign.Size * 0.5f;
+            sign.Position -= new Vector2(startXPoint - i * (padding + signBaseSize), elevatorTexture.GetHeight() * elevatorAnimation.Scale.Y * 0.7f);
 
             float baseScale = signBaseSize / sign.Size.X;
             sign.Scale = new(baseScale, baseScale);
@@ -99,13 +110,13 @@ public partial class ElevatorDisplayer : Node2D
     public void UpdateDoorDisplay(float status)
     {
         if(status < 0.05f)
-            elevator.Frame = 0;
+            elevatorAnimation.Frame = 0;
         else if(status < 0.5f)
-            elevator.Frame = 1;
+            elevatorAnimation.Frame = 1;
         else if(status < 0.95f)
-            elevator.Frame = 2;
+            elevatorAnimation.Frame = 2;
         else
-            elevator.Frame = 3;
+            elevatorAnimation.Frame = 3;
     }
 
     public void AnimateFloorSelection(int floor)
@@ -127,5 +138,8 @@ public partial class ElevatorDisplayer : Node2D
             floorSigns[i].AddText(i.ToString());
             floorSigns[i].Pop();
         }
+
+        elevatorBackground.Color = brokenAmount > 0.0f ? brokenBackgroundColor : defaultBackgroundColor;
+
     }
 }

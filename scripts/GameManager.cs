@@ -29,7 +29,7 @@ public partial class GameManager : Node
     private float lastElevatorBreakTime = -1.0f;
     private float breakerDtAccumulator = -1.0f;
     [Export] float minBreakSpanTime = 20.0f;
-    [Export] float maxBreakSpanTime = 60.0f;
+    [Export] float maxBreakSpanTime = 40.0f;
 
     public override void _Ready()
     {
