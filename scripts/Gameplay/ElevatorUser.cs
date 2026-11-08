@@ -67,12 +67,22 @@ public abstract class ElevatorUser
 
     int GetAvailableElevator(List<Elevator> elevators)
     {
+        int elevatorIndex = -1;
+        float elevatorDistance = -1.0f;
+
         for(int i = 0; i < elevators.Count; ++i)
         {
             if(elevators[i].IsAvailable() && Mathf.RoundToInt(elevators[i].m_position) == Mathf.RoundToInt(m_position.Y))
-                return i;
+            {
+                float currentDistance = Mathf.Abs(m_position.X - elevators[i].GetHorizontalPos());
+                if(elevatorIndex == -1 || elevatorDistance > currentDistance)
+                {
+                    elevatorIndex = i;
+                    elevatorDistance = currentDistance;
+                }
+            }
         }
-        return -1;
+        return elevatorIndex;
     }
 
     protected void ManageElevatorRide(List<Elevator> elevators)
