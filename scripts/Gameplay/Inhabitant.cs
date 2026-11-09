@@ -11,11 +11,11 @@ public partial class Inhabitant : ElevatorUser
     private UserSchedule m_schedule;
     public UserSchedule GetSchedule() { return m_schedule; }
 
-    public Inhabitant(int buildingDestination, float walkSpeed) : base(walkSpeed, UserType.Inhabitant)
+    public Inhabitant(int buildingDestination, float walkSpeed, float commuteTime) : base(walkSpeed, UserType.Inhabitant)
     {
         m_insideDestination = buildingDestination;
 
-        m_schedule = UserSchedule.Generate();
+        m_schedule = UserSchedule.Generate(commuteTime);
         if(m_schedule.ShouldLeave())
         {
             m_movementState = UserMovementState.Outside;
@@ -147,8 +147,7 @@ public partial class Inhabitant : ElevatorUser
     public override string GetDebugText()
     {
         string text = m_elevatorState + " - " + m_movementState + " " + Mathf.RoundToInt(m_position.Y) + "/" + m_destination;
-        text += "\nLeaves: " + (m_schedule.leaveHour < 10 ? "0" : "") + m_schedule.leaveHour + ":" + (m_schedule.leaveMinute < 10 ? "0" : "") + m_schedule.leaveMinute
-        + "\nBacks:   " + (m_schedule.backHour < 10 ? "0" : "") + m_schedule.backHour + ":" + (m_schedule.backMinute < 10 ? "0" : "") + m_schedule.backMinute;
+        text += "\n" + m_schedule;
 
         return text;
     }

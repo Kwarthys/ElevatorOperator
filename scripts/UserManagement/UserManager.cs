@@ -7,20 +7,23 @@ public partial class UserManager : Node
 {
     [Export] private UsersDisplayer usersDisplayer;
     [Export] public float usersWalkSpeed = 0.5f;
-    [Export] private int startingUserCount = 5;
-    [Export] private float addUserPeriod = 10.0f;
-    [Export] private double technicianRepairTime = 3.0;
+    [Export] private int startingUserCount = 20;
+    [Export] private float addUserPeriod = 5.0f;
+    [Export] private double technicianRepairTime = 10.0;
     [Export] private EndGameAnimationDriver endGameAnimation;
+    [Export] private Vector2 commuteMinMax = new(2.0f, 10.0f);
+    [Export] private int dayForMinCommute = 4;
+    private int minutesForMinCommute;
 
     public static float[] impatienceThresholds = [0.5f, 0.25f, 0.1f];
     private List<Inhabitant> inhabitants = [];
     private List<ElevatorTechos> technicians = [];
 
-    private double addUserDTCounter = 0.0f;
+    private double addUserDTCounter = 0.0;
 
     public bool gameLost { get; private set; } = false;
 
-    [Export] private int chaosMeterUserCountMax = 30;
+    [Export] private int chaosMeterUserCountMax = 40;
     public float chaosMeter { get; private set; } = 0.0f;
 
     public void UpdateUsers(double dt, List<Elevator> elevators)
@@ -77,7 +80,7 @@ public partial class UserManager : Node
         addUserDTCounter += dt;
         while(addUserDTCounter > addUserPeriod)
         {
-            ElevatorUser user = GenerateUser();
+            GenerateUser();
             addUserDTCounter -= addUserPeriod;
         }
     }
@@ -94,6 +97,8 @@ public partial class UserManager : Node
 
     public void InitUsers()
     {
+        minutesForMinCommute = dayForMinCommute * 24 * 60;
+
         usersDisplayer.Reset();
         inhabitants.Clear();
         gameLost = false;
@@ -105,9 +110,16 @@ public partial class UserManager : Node
 
     public int GetUserCount() { return inhabitants.Count; }
 
-    private ElevatorUser GenerateUser()
+    private Inhabitant GenerateUser()
     {
-        inhabitants.Add(new(GD.RandRange(1, 5), usersWalkSpeed * Mathf.Lerp(0.7f, 1.0f, GD.Randf())));
+        inhabitants.Add(new(GD.RandRange(1, 5), usersWalkSpeed * Mathf.Lerp(0.7f, 1.0f, GD.Randf()), ComputeCommuteDifficulty()));
         return inhabitants.Last();
+    }
+
+    private float ComputeCommuteDifficulty()
+    {
+        int minutes = GameClockManager.clock.TimeOfDayInMinutes() + GameClockManager.clock.days * 24 * 60;
+        float lerpTime = 1.0f * (minutesForMinCommute - minutes) / minutesForMinCommute;
+        return Mathf.Lerp(commuteMinMax.X, commuteMinMax.Y, lerpTime) * 60.0f;
     }
 }

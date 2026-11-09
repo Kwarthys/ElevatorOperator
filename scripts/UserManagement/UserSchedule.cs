@@ -30,7 +30,7 @@ public class UserSchedule
 
     public bool ShouldBack() { return !ShouldLeave(); }
 
-    public static UserSchedule Generate()
+    public static UserSchedule Generate(float commute)
     {
         float scheduleType = GD.Randf();
         UserSchedule sc = new();
@@ -45,15 +45,17 @@ public class UserSchedule
             sc.leaveMinute = (int)(GD.Randi() % 60);
             sc.backMinute = (int)(GD.Randi() % 60);
 
-            int outTime = GD.RandRange(3, 12);
-            sc.backHour = (sc.leaveHour + outTime) % 24;
+            int outHours = Mathf.RoundToInt(commute / 60.0f);
+            sc.backHour = (sc.leaveHour + outHours) % 24;
         }
         else
         {
             sc.leaveHour = GD.RandRange(5, 12);
             sc.leaveMinute = (int)(GD.Randi() % 60);
-            sc.backHour = GD.RandRange(16, 26) % 24;
             sc.backMinute = (int)(GD.Randi() % 60);
+
+            int outHours = Mathf.RoundToInt(commute / 60.0f);
+            sc.backHour = (sc.leaveHour + outHours) % 24;
 
             if(scheduleType > 0.85f) // 15% flipped schedule
             {
@@ -66,4 +68,11 @@ public class UserSchedule
 
         return sc;
     }
+
+    public override string ToString()
+    {
+        return "\nLeaves: " + (leaveHour < 10 ? "0" : "") + leaveHour + ":" + (leaveMinute < 10 ? "0" : "") + leaveMinute
+        + "\nBacks:   " + (backHour < 10 ? "0" : "") + backHour + ":" + (backMinute < 10 ? "0" : "") + backMinute;
+    }
+
 }
