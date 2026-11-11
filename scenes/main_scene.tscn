@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://cqv52q0wus5rh"]
+[gd_scene load_steps=24 format=3 uid="uid://cqv52q0wus5rh"]
 
 [ext_resource type="Script" uid="uid://c64u4diqj8njf" path="res://scripts/InputManager.cs" id="1_w2twt"]
 [ext_resource type="Script" uid="uid://dp4uxx5m0q0d1" path="res://scripts/GameManager.cs" id="2_pw63i"]
@@ -29,6 +29,9 @@ colors = PackedColorArray(0.7607843, 0.14117648, 0.1254902, 1, 0.30588236, 0.6, 
 metadata/_snap_count = 6
 metadata/_snap_enabled = true
 
+[sub_resource type="Gradient" id="Gradient_xdqt8"]
+colors = PackedColorArray(0.078431375, 0, 0, 1, 0.19607843, 0.11764706, 0.11764706, 1)
+
 [node name="Root" type="Node2D"]
 
 [node name="InputManager" type="Node" parent="." node_paths=PackedStringArray("gameManager")]
@@ -47,24 +50,26 @@ gameClockManager = NodePath("../GameClockManager")
 startGameButton = NodePath("../Scenery/StartGameButton")
 endGameManager = NodePath("../EndGameScreen")
 brickBackground = NodePath("../Scenery/BackgroundSpritesHolder/BricksTexture")
+minBreakSpanTime = 25.0
 
 [node name="BackgroundDisplayer" type="Node" parent="." node_paths=PackedStringArray("backgroundHolder", "backgroundTextsHolder", "elevatorButtonCallHolder", "callManager")]
 script = ExtResource("5_gubc5")
-backgroundColor = Color(0.07058824, 0.07058824, 0.078431375, 0.9411765)
+textColor = Color(0.078431375, 0.078431375, 0.078431375, 1)
 selectionColor = Color(0.45882353, 1, 1, 0.23529412)
 colors = SubResource("Gradient_gubc5")
 backgroundHolder = NodePath("../Scenery/BackgroundSpritesHolder")
 backgroundTextsHolder = NodePath("../Scenery/FloorTextsHolder")
 elevatorButtonCallHolder = NodePath("../Scenery/ElevatorButtonsHolder")
 callManager = NodePath("../ElevatorCallManager")
+nightEndStart = Vector2i(5, 22)
+transientTime_Hour = 0.1
+backgroundColor = SubResource("Gradient_xdqt8")
+alpha = 0.91
 
 [node name="UserManager" type="Node" parent="." node_paths=PackedStringArray("usersDisplayer", "endGameAnimation")]
 script = ExtResource("5_rt2n2")
 usersDisplayer = NodePath("UsersDisplayer")
-addUserPeriod = 5.0
-technicianRepairTime = 10.0
 endGameAnimation = NodePath("EndGameAnimator")
-chaosMeterUserCountMax = 40
 
 [node name="UsersDisplayer" type="Node" parent="UserManager" node_paths=PackedStringArray("sceneryHolder")]
 script = ExtResource("4_pu3yx")
@@ -83,7 +88,6 @@ highPause = 1.5
 
 [node name="GameClockManager" type="Node" parent="."]
 script = ExtResource("7_c16ls")
-gameHourDuration_sec = 5.0
 
 [node name="ElevatorCallManager" type="Node" parent="."]
 script = ExtResource("10_4w45t")
@@ -166,6 +170,7 @@ theme = ExtResource("20_k6f3i")
 text = "Start Game"
 
 [node name="EndGameScreen" parent="." instance=ExtResource("21_xdqt8")]
+visible = false
 offset_left = -793.0
 offset_top = 418.0
 offset_right = -793.0

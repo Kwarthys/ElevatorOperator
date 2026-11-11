@@ -5,7 +5,7 @@ using System.Linq;
 
 public partial class BackgroundDisplayer : Node
 {
-    [Export] private Color backgroundColor;
+    [Export] private Color textColor;
     [Export] private Color selectionColor;
     [Export] private Gradient colors;
     [Export] private Node2D backgroundHolder;
@@ -13,42 +13,78 @@ public partial class BackgroundDisplayer : Node
     [Export] private Node2D elevatorButtonCallHolder;
     [Export] private ElevatorCallManager callManager;
 
-    private List<SceneryItem> items = new();
-    private SceneryNode2D selectionDisplayer;
+    [Export] private Vector2I nightEndStart = new(4, 21);
+    [Export] private float transientTime_Hour = 1.0f;
+    [Export] private Gradient backgroundColor;
+    [Export] private float alpha = 0.9f;
+
+    private List<SceneryItem> m_items = new();
+    private SceneryNode2D m_selectionDisplayer;
+    private SceneryNode2D m_background;
 
     public override void _Ready()
     {
-        items.Add(CreateItem(backgroundColor, new(0.5f, 0.5f), new(1.0f, 1.0f)));
+        m_background = CreateItem(new(1.0f, 1.0f, 1.0f), new(0.5f, 0.5f), new(1.0f, 1.0f));
+        m_items.Add(m_background);
 
         for(int i = 0; i < 6; ++i)
         {
             float xPos = (i + 1) / 7.0f;
-            items.Add(CreateItemLowShadow(SampleColor(i), new(0.5f, xPos), new(1.0f, 0.01f)));
-            items.Add(CreateFloorDisplay(5 - i, backgroundColor, new(0.05f, xPos), new(-1.0f, -1.0f)));
+            m_items.Add(CreateItemLowShadow(SampleColor(i), new(0.5f, xPos), new(1.0f, 0.01f)));
+            m_items.Add(CreateFloorDisplay(5 - i, textColor, new(0.05f, xPos), new(-1.0f, -1.0f)));
 
             SceneryNode2D item = CreateTriangle(new(0.175f, xPos), new(0.0005f, 0.001f), i == 5);
-            items.Add(item);
+            m_items.Add(item);
             callManager.RegisterCallButton((Sprite2D)item.node);
             item = CreateTriangle(new(0.825f, xPos), new(0.0005f, 0.001f), i == 5);
-            items.Add(item);
+            m_items.Add(item);
             callManager.RegisterCallButton((Sprite2D)item.node);
         }
 
-        selectionDisplayer = CreateItemCenterGlow(selectionColor, new(1.0f / 4.0f, 0.5f), new(0.01f, 1.0f));
-        items.Add(selectionDisplayer);
+        m_selectionDisplayer = CreateItemCenterGlow(selectionColor, new(1.0f / 4.0f, 0.5f), new(0.01f, 1.0f));
+        m_items.Add(m_selectionDisplayer);
 
         UpdateScenery();
     }
 
+    public override void _Process(double dt)
+    {
+        float currentHour = GameClockManager.clock.hours + GameClockManager.clock.minutes / 60.0f;
+        float value;
+        if(currentHour < nightEndStart.X || currentHour > nightEndStart.Y + transientTime_Hour)
+        {
+            value = 0.0f;
+        }
+        else if(currentHour > nightEndStart.X + transientTime_Hour && currentHour < nightEndStart.Y)
+        {
+            value = 1.0f;
+        }
+        else if(currentHour < nightEndStart.Y)
+        {
+            // 0 -> 1
+            value = Mathf.InverseLerp(nightEndStart.X, nightEndStart.X + transientTime_Hour, currentHour);
+        }
+        else
+        {
+            // 1 -> 0
+            value = 1.0f - Mathf.InverseLerp(nightEndStart.Y, nightEndStart.Y + transientTime_Hour, currentHour);
+        }
+
+        Color c = backgroundColor.Sample(value);
+        c.A = alpha;
+        m_background.node.Modulate = c;
+    }
+
+
     public void UpdateScenery()
     {
-        items.ForEach((i) => i.Update());
+        m_items.ForEach((i) => i.Update());
     }
 
     public void MoveSelection(float x)
     {
-        selectionDisplayer.center.X = x;
-        selectionDisplayer.Update();
+        m_selectionDisplayer.center.X = x;
+        m_selectionDisplayer.Update();
     }
 
     private SceneryNode2D CreateSceneryNode(Vector2 center, Vector2 size, Node2D sprite)

@@ -24,7 +24,7 @@ public partial class ClockDrawer : Node2D
         float angleDegrees = 180.0f + minutes / (12.0f * 60.0f) * 360.0f;
         m_needle.RotationDegrees = angleDegrees % 360.0f;
 
-        if(GameClockManager.clock.hours >= 8 && GameClockManager.clock.hours < 22)
+        if(GameClockManager.clock.hours >= 5 && GameClockManager.clock.hours < 22)
         {
             // Light Mode
             if(m_isDarkMode)
