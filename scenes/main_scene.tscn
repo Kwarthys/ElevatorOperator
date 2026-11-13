@@ -34,7 +34,7 @@ metadata/_snap_count = 6
 metadata/_snap_enabled = true
 
 [sub_resource type="Gradient" id="Gradient_xdqt8"]
-colors = PackedColorArray(0.078431375, 0, 0, 1, 0.19607843, 0.11764706, 0.11764706, 1)
+colors = PackedColorArray(0.039215688, 0, 0, 1, 0.13725491, 0.019607844, 0.019607844, 1)
 
 [node name="Root" type="Node2D"]
 
