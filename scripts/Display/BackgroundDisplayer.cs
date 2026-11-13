@@ -128,14 +128,24 @@ public partial class BackgroundDisplayer : Node
     {
         const int w = 400;
         const int h = 40;
-        const float minAlpha = 0.5f;
+        const float minAlpha = 0.6f;
         Image img = Image.CreateEmpty(w, h, false, Image.Format.Rgba8);
+
+        float patternRandomChoice = GD.Randf();
 
         for(int y = 0; y < h; ++y)
         {
             for(int x = 0; x < w; ++x)
             {
-                img.SetPixel(x, y, c * (1.0f - (1.0f - minAlpha) * y / h));
+                Color baseColor = c * (1.0f - (1.0f - minAlpha) * y / h);
+
+                if(patternRandomChoice > 0.4f)
+                {
+                    if((y - x) % 10 != 0 && (y + x) % 10 != 0)
+                        baseColor *= 0.92f;
+                }
+
+                img.SetPixel(x, y, baseColor);
             }
         }
         return ImageTexture.CreateFromImage(img);
