@@ -18,19 +18,27 @@ public partial class BackgroundDisplayer : Node
     [Export] private Gradient backgroundColor;
     [Export] private float alpha = 0.9f;
 
+    [Export] private Godot.Collections.Array<Texture2D> wallpaperTextures;
+    private List<Image> wallpaperImportedPatterns = [];
+
     private List<SceneryItem> m_items = new();
     private SceneryNode2D m_selectionDisplayer;
     private SceneryNode2D m_background;
 
     public override void _Ready()
     {
+        foreach(Texture2D t in wallpaperTextures)
+        {
+            wallpaperImportedPatterns.Add(t.GetImage());
+        }
+
         m_background = CreateItem(new(1.0f, 1.0f, 1.0f), new(0.5f, 0.5f), new(1.0f, 1.0f));
         m_items.Add(m_background);
 
         for(int i = 0; i < 6; ++i)
         {
             float xPos = (i + 1) / 7.0f;
-            m_items.Add(CreateItemLowShadow(SampleColor(i), new(0.5f, xPos), new(1.0f, 0.1f)));
+            m_items.Add(CreateItemFloorWallpaper(SampleColor(i), new(0.5f, xPos), new(1.0f, 0.1f)));
             m_items.Add(CreateFloorDisplay(5 - i, textColor, new(0.05f, xPos), new(-1.0f, -1.0f)));
 
             SceneryNode2D item = CreateTriangle(new(0.175f, xPos), new(0.0005f, 0.001f), i == 5);
@@ -110,10 +118,10 @@ public partial class BackgroundDisplayer : Node
         return CreateSceneryNode(center, size, sprite);
     }
 
-    private SceneryNode2D CreateItemLowShadow(Color c, Vector2 center, Vector2 size)
+    private SceneryNode2D CreateItemFloorWallpaper(Color c, Vector2 center, Vector2 size)
     {
         Sprite2D sprite = new();
-        sprite.Texture = createTextureLowShadow(c);
+        sprite.Texture = createTextureFloorWallpaper(c);
         return CreateSceneryNode(center, size / sprite.Texture.GetSize(), sprite);
     }
 
@@ -124,14 +132,16 @@ public partial class BackgroundDisplayer : Node
         return CreateSceneryNode(center, size, sprite);
     }
 
-    private Texture2D createTextureLowShadow(Color c)
+    private Texture2D createTextureFloorWallpaper(Color c)
     {
-        const int w = 400;
+        const int w = 600;
         const int h = 40;
         const float minAlpha = 0.6f;
+        const float patternBackgroundPenalty = 0.92f;
         Image img = Image.CreateEmpty(w, h, false, Image.Format.Rgba8);
 
-        float patternRandomChoice = GD.Randf();
+        bool codedPattern = GD.Randf() > 0.95f;
+        Image pattern = wallpaperImportedPatterns[GD.RandRange(0, wallpaperImportedPatterns.Count - 1)];
 
         for(int y = 0; y < h; ++y)
         {
@@ -139,10 +149,16 @@ public partial class BackgroundDisplayer : Node
             {
                 Color baseColor = c * (1.0f - (1.0f - minAlpha) * y / h);
 
-                if(patternRandomChoice > 0.4f)
+                if(codedPattern)
                 {
                     if((y - x) % 10 != 0 && (y + x) % 10 != 0)
-                        baseColor *= 0.92f;
+                        baseColor *= patternBackgroundPenalty;
+                }
+                else
+                {
+                    bool shadow = pattern.GetPixel(x % pattern.GetSize().X, y % pattern.GetSize().Y).R < 0.5f;
+                    if(shadow)
+                        baseColor *= patternBackgroundPenalty;
                 }
 
                 img.SetPixel(x, y, baseColor);
