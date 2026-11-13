@@ -30,7 +30,7 @@ public partial class BackgroundDisplayer : Node
         for(int i = 0; i < 6; ++i)
         {
             float xPos = (i + 1) / 7.0f;
-            m_items.Add(CreateItemLowShadow(SampleColor(i), new(0.5f, xPos), new(1.0f, 0.01f)));
+            m_items.Add(CreateItemLowShadow(SampleColor(i), new(0.5f, xPos), new(1.0f, 0.1f)));
             m_items.Add(CreateFloorDisplay(5 - i, textColor, new(0.05f, xPos), new(-1.0f, -1.0f)));
 
             SceneryNode2D item = CreateTriangle(new(0.175f, xPos), new(0.0005f, 0.001f), i == 5);
@@ -114,7 +114,7 @@ public partial class BackgroundDisplayer : Node
     {
         Sprite2D sprite = new();
         sprite.Texture = createTextureLowShadow(c);
-        return CreateSceneryNode(center, size, sprite);
+        return CreateSceneryNode(center, size / sprite.Texture.GetSize(), sprite);
     }
 
     private SceneryNode2D CreateItemCenterGlow(Color c, Vector2 center, Vector2 size)
@@ -126,10 +126,18 @@ public partial class BackgroundDisplayer : Node
 
     private Texture2D createTextureLowShadow(Color c)
     {
-        Image img = Image.CreateEmpty(1, 10, false, Image.Format.Rgba8);
+        const int w = 400;
+        const int h = 40;
+        const float minAlpha = 0.5f;
+        Image img = Image.CreateEmpty(w, h, false, Image.Format.Rgba8);
 
-        for(int i = 0; i < 10; ++i)
-            img.SetPixel(0, i, c * (1.0f - i / 20.0f));
+        for(int y = 0; y < h; ++y)
+        {
+            for(int x = 0; x < w; ++x)
+            {
+                img.SetPixel(x, y, c * (1.0f - (1.0f - minAlpha) * y / h));
+            }
+        }
         return ImageTexture.CreateFromImage(img);
     }
 
