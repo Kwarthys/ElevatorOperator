@@ -8,6 +8,7 @@ public partial class UserManager : Node
     [Export] private UsersDisplayer usersDisplayer;
     [Export] public float usersWalkSpeed = 0.5f;
     [Export] private int startingUserCount = 20;
+    [Export] private Vector2I startingEarlyUserMinMax = new(2, 6);
     [Export] private float addUserPeriod = 5.0f;
     [Export] private double technicianRepairTime = 10.0;
     [Export] private EndGameAnimationDriver endGameAnimation;
@@ -102,17 +103,28 @@ public partial class UserManager : Node
         usersDisplayer.Reset();
         inhabitants.Clear();
         gameLost = false;
+
+        int earlyUsers = GD.RandRange(startingEarlyUserMinMax.X, startingEarlyUserMinMax.Y);
+
         for(int i = 0; i < startingUserCount; ++i)
         {
-            GenerateUser();
+            UserSchedule sc = null;
+            if(i < earlyUsers)
+                sc = UserSchedule.GenerateForFirstHours();
+            GenerateUser(sc);
         }
     }
 
     public int GetUserCount() { return inhabitants.Count; }
 
-    private Inhabitant GenerateUser()
+    private Inhabitant GenerateUser(UserSchedule schedule = null)
     {
-        inhabitants.Add(new(GD.RandRange(1, 5), usersWalkSpeed * Mathf.Lerp(0.7f, 1.0f, GD.Randf()), ComputeCommuteDifficulty()));
+        int homeFloor = GD.RandRange(1, 5);
+        float walkSpeed = usersWalkSpeed * Mathf.Lerp(0.7f, 1.0f, GD.Randf());
+        if(schedule == null)
+            inhabitants.Add(new(homeFloor, walkSpeed, ComputeCommuteDifficulty()));
+        else
+            inhabitants.Add(new(homeFloor, walkSpeed, schedule));
         return inhabitants.Last();
     }
 

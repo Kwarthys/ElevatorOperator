@@ -11,11 +11,14 @@ public partial class Inhabitant : ElevatorUser
     private UserSchedule m_schedule;
     public UserSchedule GetSchedule() { return m_schedule; }
 
-    public Inhabitant(int buildingDestination, float walkSpeed, float commuteTime) : base(walkSpeed, UserType.Inhabitant)
+    public Inhabitant(int buildingDestination, float walkSpeed, float commuteTime) : this(buildingDestination, walkSpeed, UserSchedule.Generate(commuteTime))
+    { }
+
+    public Inhabitant(int buildingDestination, float walkSpeed, UserSchedule schedule) : base(walkSpeed, UserType.Inhabitant)
     {
         m_insideDestination = buildingDestination;
 
-        m_schedule = UserSchedule.Generate(commuteTime);
+        m_schedule = schedule;
         if(m_schedule.ShouldLeave())
         {
             m_movementState = UserMovementState.Outside;
